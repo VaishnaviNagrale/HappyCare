@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "750313250749",
+    "project_id": "happycare-fef6a",
+    "storage_bucket": "happycare-fef6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:750313250749:android:361a2e6682d9c68cf17cd4",
+        "android_client_info": {
+          "package_name": "com.vaishnavi_nagrale.happycare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhM2HcDkwAD5W7ipC97v9O4U7TLDLfVcw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
