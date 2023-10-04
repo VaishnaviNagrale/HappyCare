@@ -1,9 +1,9 @@
 // ignore_for_file: non_constant_identifier_names, camel_case_types
 
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:happycare/screens/doctor/test_list_screen.dart';
 
 class DoctorsHomeScreen extends StatelessWidget {
   final String userEmail;
@@ -78,7 +78,7 @@ class DoctorsHomeScreen extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 title: const Text(
-                  'Patients Assigned',
+                  'Patients Assigned To Doctor',
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w700,
@@ -125,7 +125,15 @@ class Patient_List extends StatelessWidget {
             child: Image.asset('assets/images/child.png'),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      TestListScreen(patient_name: patient_name),
+                ),
+              );
+            },
             child: Text(
               patient_name,
               style: const TextStyle(
