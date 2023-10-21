@@ -128,16 +128,34 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.blue,
+          ),
+          onPressed: () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => SignInScreen()));
+          },
+        ),
+        backgroundColor: Colors.white,
+        shadowColor: Colors.white,
+        elevation: 0,
+      ),
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
           child: ListView(
             children: [
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Image(
-                  image: AssetImage('assets/images/signup.png'),
+                  height: 250,
+                  width: 250,
+                  image: AssetImage('assets/images/swastyaseva-logo.jpg'),
                 ),
               ),
               Container(
@@ -214,7 +232,7 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
                 child: TextFormField(
                   autofocus: false,
                   decoration: const InputDecoration(
-                    labelText: 'mobile no',
+                    labelText: 'Mobile No',
                     labelStyle: TextStyle(fontSize: 15),
                     border: OutlineInputBorder(),
                     errorStyle: TextStyle(color: Colors.black54, fontSize: 15),
@@ -236,7 +254,7 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
                 child: TextFormField(
                   autofocus: false,
                   decoration: const InputDecoration(
-                    labelText: 'ID no',
+                    labelText: 'ID No',
                     labelStyle: TextStyle(fontSize: 15),
                     border: OutlineInputBorder(),
                     errorStyle: TextStyle(color: Colors.black54, fontSize: 15),
@@ -357,6 +375,7 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
                 ),
               ),
               Container(
+                margin: EdgeInsets.only(bottom: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

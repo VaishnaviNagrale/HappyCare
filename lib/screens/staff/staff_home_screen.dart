@@ -10,10 +10,12 @@ class StaffHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: Color(0xFF82D7FF),
       appBar: AppBar(
+        backgroundColor: Color(0xFFFF9900),
         title: Text(
           'Staff Name: $staff_name',
-           style: const TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -24,13 +26,15 @@ class StaffHomeScreen extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.all(18.0),
               child: Image(
-                image: AssetImage('assets/images/hospital_logo.jpg'),
+                image: AssetImage('assets/images/hospital_logo.png'),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
             ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Color(0xFF044B06)),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -49,10 +53,15 @@ class StaffHomeScreen extends StatelessWidget {
               height: 20,
             ),
             ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Color(0xFF03FF0C)),
               onPressed: () {},
               child: const Text(
                 'Discharge Patient',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black),
               ),
             ),
           ],

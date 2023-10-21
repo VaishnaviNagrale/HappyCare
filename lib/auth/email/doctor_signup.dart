@@ -145,16 +145,34 @@ class _DoctorEmailPassSignUpState extends State<DoctorEmailPassSignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.blue,
+          ),
+          onPressed: () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => SignInScreen()));
+          },
+        ),
+        backgroundColor: Colors.white,
+        shadowColor: Colors.white,
+        elevation: 0,
+      ),
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
           child: ListView(
             children: [
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Image(
-                  image: AssetImage('assets/images/signup.png'),
+                  height: 250,
+                  width: 250,
+                  image: AssetImage('assets/images/swastyaseva-logo.jpg'),
                 ),
               ),
               Container(
@@ -254,7 +272,7 @@ class _DoctorEmailPassSignUpState extends State<DoctorEmailPassSignUp> {
                 child: TextFormField(
                   autofocus: false,
                   decoration: const InputDecoration(
-                    labelText: 'mobile no',
+                    labelText: 'Mobile No',
                     labelStyle: TextStyle(fontSize: 15),
                     border: OutlineInputBorder(),
                     errorStyle: TextStyle(color: Colors.black54, fontSize: 15),
@@ -276,7 +294,7 @@ class _DoctorEmailPassSignUpState extends State<DoctorEmailPassSignUp> {
                 child: TextFormField(
                   autofocus: false,
                   decoration: const InputDecoration(
-                    labelText: 'ID no',
+                    labelText: 'ID No',
                     labelStyle: TextStyle(fontSize: 15),
                     border: OutlineInputBorder(),
                     errorStyle: TextStyle(color: Colors.black54, fontSize: 15),
@@ -367,7 +385,7 @@ class _DoctorEmailPassSignUpState extends State<DoctorEmailPassSignUp> {
                 height: 15.0,
               ),
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 20.0),
+                margin: const EdgeInsets.only(top: 20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -396,25 +414,28 @@ class _DoctorEmailPassSignUpState extends State<DoctorEmailPassSignUp> {
                   ],
                 ),
               ),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already have an account ?'),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation1, animation2) =>
-                                const SignInScreen(),
-                            transitionDuration: const Duration(seconds: 0),
-                          ),
-                        );
-                      },
-                      child: const Text('Login'),
-                    ),
-                  ],
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 20),
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Already have an account ?'),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation1, animation2) =>
+                                  const SignInScreen(),
+                              transitionDuration: const Duration(seconds: 0),
+                            ),
+                          );
+                        },
+                        child: const Text('Login'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

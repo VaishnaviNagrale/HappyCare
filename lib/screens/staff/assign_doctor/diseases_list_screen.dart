@@ -6,17 +6,18 @@ import 'package:happycare/screens/staff/assign_doctor/assign_doctor_screen.dart'
 class DisaesesListScreen extends StatelessWidget {
   final String staff_name;
   final String patient_name;
-  const DisaesesListScreen({super.key, required this.staff_name, required this.patient_name});
+  const DisaesesListScreen(
+      {super.key, required this.staff_name, required this.patient_name});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFFFF9900),
         title: const Text(
           'List Of Diseases',
           style: TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
@@ -89,7 +90,8 @@ class Disease_List extends StatelessWidget {
   const Disease_List({
     super.key,
     required this.disease_name,
-    required this.staff_name, required this.patient_name,
+    required this.staff_name,
+    required this.patient_name,
   });
 
   @override

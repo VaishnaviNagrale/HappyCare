@@ -60,11 +60,11 @@ class AssignDoctorToPatientScreen extends StatelessWidget {
             List<String>? available_doctors = snapshot.data;
             return Scaffold(
               appBar: AppBar(
+                backgroundColor: Color(0xFFFF9900),
                 title: Text(
                   'Doctors For $selected_disease_name Disease',
                   style: const TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 centerTitle: true,
@@ -159,7 +159,7 @@ class Doctor_List extends StatelessWidget {
                   ),
                 ),
                 content: Text(
-                  'Are you sure you want to assign $patient_name to this doctor: $doctor_name?',
+                  'Are you sure you want to assign $patient_name to $doctor_name?',
                   style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w500,

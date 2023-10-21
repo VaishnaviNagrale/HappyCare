@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:happycare/screens/payments/payment_home_screen.dart';
 import 'package:happycare/screens/staff/assign_doctor/diseases_list_screen.dart';
 
 class AddPatientScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
   String address = '';
   int? age;
   bool? isMale;
+  bool? isPaid;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController mobilenoController = TextEditingController();
@@ -75,11 +77,11 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Color(0xFFFF9900),
         title: const Text(
           'Add New Patient Form',
           style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
@@ -87,7 +89,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
           child: ListView(
             children: [
               const Padding(
@@ -110,6 +112,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                     errorStyle: TextStyle(color: Colors.black54, fontSize: 15),
                   ),
                   controller: nameController,
+                  keyboardType: TextInputType.name,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'please enter full name';
@@ -278,29 +281,52 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               const SizedBox(
                 height: 5,
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFFFECB3)),
-                onPressed: () {},
-                child: const Text(
-                  'Cash',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
+              Row(
+                children: [
+                  Checkbox(
+                    value: isPaid ?? false,
+                    onChanged: (value) {
+                      setState(() {
+                        isPaid = value;
+                      });
+                    },
                   ),
-                ),
+                  const Text(
+                    'Cash',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text(
-                  'Online Payment',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
+              Row(
+                children: [
+                  Checkbox(
+                    value: !(isPaid ?? false),
+                    onChanged: (value) {
+                      setState(() {
+                        isPaid = !value!;
+                      });
+                    },
                   ),
-                ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PaymentScreen()));
+                    },
+                    child: const Text(
+                      'Online Payment',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 15.0,
@@ -308,8 +334,8 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 20.0),
                 child: ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF03FF0C)),
                   onPressed: () {
                     Registration();
                   },
@@ -317,6 +343,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                     'Assign Doctor',
                     style: TextStyle(
                       fontSize: 18.0,
+                      color: Colors.black,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

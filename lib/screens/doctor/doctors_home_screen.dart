@@ -77,12 +77,13 @@ class DoctorsHomeScreen extends StatelessWidget {
             List<String>? patients = snapshot.data;
             return Scaffold(
               appBar: AppBar(
+                backgroundColor: Color(0xFFFF9900),
                 title: const Text(
                   'Patients Assigned To Doctor',
                   style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.bold,
                   ),
+                  maxLines: 2,
                 ),
                 centerTitle: true,
               ),
@@ -112,35 +113,39 @@ class Patient_List extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
+          color: Color(0xFFFFF389),
           border: Border.all(
-        width: 2,
-        color: Colors.black,
-      )),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 50,
-            width: 50,
-            child: Image.asset('assets/images/child.png'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      TestListScreen(patient_name: patient_name),
-                ),
-              );
-            },
-            child: Text(
-              patient_name,
-              style: const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.w600),
+            width: 2,
+            color: Colors.black,
+          )),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 50,
+              width: 50,
+              child: Image.asset('assets/images/child.png'),
             ),
-          ),
-        ],
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        TestListScreen(patient_name: patient_name),
+                  ),
+                );
+              },
+              child: Text(
+                patient_name,
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

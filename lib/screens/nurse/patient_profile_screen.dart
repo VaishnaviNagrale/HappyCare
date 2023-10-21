@@ -30,8 +30,9 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFB9D3FF),
+      //backgroundColor: const Color(0xFFB9D3FF),
       appBar: AppBar(
+        backgroundColor: Color(0xFFFF9900),
         title: Text(
           'Patient Name: ${widget.name}',
           style: const TextStyle(fontWeight: FontWeight.bold),
@@ -46,20 +47,23 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
             ),
             const Text(
               'About :',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  color: Color(0xFF023259),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
             ),
             const SizedBox(
               height: 5,
             ),
-            Card(
+            Container(
               child: Padding(
-                padding: const EdgeInsets.all(18.0),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Column(
                   children: [
                     Text(
                       'Nurse Assigned: ${widget.nurse_assigned}',
-                      style:
-                          const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(
                       height: 5,
@@ -86,12 +90,15 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
             ),
             const Text(
               'Tests :',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  color: Color(0xFF023259),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
             ),
             const SizedBox(
               height: 5,
             ),
-            Card(
+            Container(
               child: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Column(
@@ -129,12 +136,15 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
             ),
             const Text(
               'Medicines :',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  color: Color(0xFF023259),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
             ),
             const SizedBox(
               height: 5,
             ),
-            Card(
+            Container(
               child: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Column(
@@ -157,6 +167,8 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Color(0xFF044B06)),
               onPressed: () {
                 // Save or update the data in Firestore with the new values.
                 // You can use Firebase or another database to store this data.

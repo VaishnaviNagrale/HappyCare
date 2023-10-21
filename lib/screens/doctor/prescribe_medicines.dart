@@ -51,6 +51,7 @@ class _PrescribeMedicinesToPatientState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFFFF9900),
         title: Text(
           'Prescribe medicines to ${widget.patient_name}',
           maxLines: 3,
@@ -59,6 +60,7 @@ class _PrescribeMedicinesToPatientState
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFF28802B),
         onPressed: () {
           _addTask(context);
         },
@@ -70,7 +72,7 @@ class _PrescribeMedicinesToPatientState
           SizedBox(
             height: 200,
             width: 200,
-            child: Image.asset('assets/images/medicines.jpg'),
+            child: Image.asset('assets/images/medicines.png'),
           ),
           Expanded(
             child: ListView.builder(
@@ -84,7 +86,7 @@ class _PrescribeMedicinesToPatientState
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 1,
                         horizontal: 20), // Padding around the content
-                    tileColor: Colors.grey[100], // Background color
+                    tileColor: Colors.grey[300], // Background color
                     shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(10.0), // Rounded corners
@@ -148,7 +150,10 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
           children: [
             const Text(
               'Add Medicine',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF083745)),
             ),
             const SizedBox(
               height: 20,
@@ -181,9 +186,14 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: const Text('Cancel'),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Color(0xFF0B406B)),
+                  ),
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF0B3E68)),
                   onPressed: () {
                     final name = nameController.text;
                     final quantityAndDays = quantityController.text;

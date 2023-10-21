@@ -19,6 +19,7 @@ class NurseHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFFFF9900),
         title: Text(
           'Nurse: $name',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -103,6 +104,7 @@ class Patient_List extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
+        color: Color(0xFFFFF389),
         border: Border.all(
           width: 2,
           color: Colors.black,

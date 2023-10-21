@@ -53,7 +53,9 @@ class _EmailPassLoginScreenState extends State<EmailPassLoginScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => DoctorsHomeScreen(userEmail: userEmail,),
+              builder: (context) => DoctorsHomeScreen(
+                userEmail: userEmail,
+              ),
             ),
           );
         } else if (userType == 'UserType.nurse') {
@@ -68,8 +70,7 @@ class _EmailPassLoginScreenState extends State<EmailPassLoginScreen> {
               ),
             ),
           );
-        } 
-         else if (userType == 'UserType.staff') {
+        } else if (userType == 'UserType.staff') {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(

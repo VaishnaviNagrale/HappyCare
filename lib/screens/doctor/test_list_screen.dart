@@ -9,6 +9,7 @@ class TestListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFFFF9900),
         title: Text(
           'Medical tests that should be assigned to $patient_name',
           maxLines: 3,
@@ -29,35 +30,37 @@ class TestListScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFBCA4FF)),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Color(0xFF044B06)),
               onPressed: () {},
               child: const Text(
                 'Send Patient for tests',
                 style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurpleAccent),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Color(0xFF03FF0C)),
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PrescribeMedicinesToPatient(patient_name: patient_name,)));
+                        builder: (context) => PrescribeMedicinesToPatient(
+                              patient_name: patient_name,
+                            )));
               },
               child: const Text(
                 'Prescribe Medicines',
                 style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
@@ -87,10 +90,11 @@ class _Tests_ListState extends State<Tests_List> {
     return Container(
       margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
+          color: Color(0xFFFFF389),
           border: Border.all(
-        width: 1,
-        color: Colors.blue,
-      )),
+            width: 1,
+            color: Colors.blue,
+          )),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

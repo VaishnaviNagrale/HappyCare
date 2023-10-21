@@ -15,10 +15,25 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        const Text(
-          'Sign In',
-          style: TextStyle(
-              color: Colors.black, fontSize: 25.0, fontWeight: FontWeight.bold),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/swastyaseva-logo.jpg',
+              height: 100,
+              width: 100,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            const Text(
+              'Sign In',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 28.0,
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
         const SizedBox(
           height: 50.0,
@@ -31,30 +46,33 @@ class _SignInScreenState extends State<SignInScreen> {
               color: Colors.black,
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 50,
-                width: 50,
-                child: Image.asset('assets/images/email-logo.png'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const EmailPassLoginScreen(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Sign in as Doctor',
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.w600),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: Image.asset('assets/images/doctor.png'),
                 ),
-              ),
-            ],
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EmailPassLoginScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Sign in as Doctor',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(
@@ -68,30 +86,33 @@ class _SignInScreenState extends State<SignInScreen> {
               color: Colors.black,
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 50,
-                width: 50,
-                child: Image.asset('assets/images/email-logo.png'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const EmailPassLoginScreen(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Sign in as Nurse',
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.w600),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: Image.asset('assets/images/nurse.png'),
                 ),
-              ),
-            ],
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EmailPassLoginScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Sign in as Nurse',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(
@@ -105,30 +126,33 @@ class _SignInScreenState extends State<SignInScreen> {
               color: Colors.black,
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 50,
-                width: 50,
-                child: Image.asset('assets/images/email-logo.png'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const EmailPassLoginScreen(),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Sign in as Staff',
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.w600),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: Image.asset('assets/images/receptionist.png'),
                 ),
-              ),
-            ],
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EmailPassLoginScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Sign in as Staff',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(
