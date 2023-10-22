@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:happycare/auth/email/email_pass_login.dart';
 import 'package:happycare/auth/signup_page.dart';
+import 'package:happycare/text_recognition/text_rec_home_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -23,7 +24,7 @@ class _SignInScreenState extends State<SignInScreen> {
               height: 100,
               width: 100,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             const Text(
@@ -177,6 +178,21 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
             ),
           ],
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFFEF1351),
+          ),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const TextRecognitionHomeScreen()));
+          },
+          child: const Text(
+            'Scan Prescription',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
         ),
       ]),
     );
