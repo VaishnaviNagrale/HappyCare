@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:happycare/dbHelper/mongodb.dart';
 
 class Medicine {
   final String name;
-  final String quantityAndDays;
+  final String quantity;
+  final String noDays;
 
-  Medicine({required this.name, required this.quantityAndDays});
+  Medicine({required this.name, required this.quantity, required this.noDays});
 }
 
 class PrescribeMedicinesToPatient extends StatefulWidget {
@@ -18,16 +21,14 @@ class PrescribeMedicinesToPatient extends StatefulWidget {
 
 class _PrescribeMedicinesToPatientState
     extends State<PrescribeMedicinesToPatient> {
-  final List<Medicine> prescribedMedicines =
-      []; // List to store prescribed medicines
+  final List<Medicine> prescribedMedicines = [];
 
-  // Function to add a medicine to the list
-  void _addMedicine(String name, String quantityAndDays) {
+  void _addMedicine(String name, String quantity, String noDays) {
     setState(() {
       prescribedMedicines
-          .add(Medicine(name: name, quantityAndDays: quantityAndDays));
+          .add(Medicine(name: name, quantity: quantity, noDays: noDays));
     });
-    Navigator.pop(context); // Close the bottom sheet
+    Navigator.pop(context);
   }
 
   void _addTask(BuildContext context) {
@@ -40,7 +41,7 @@ class _PrescribeMedicinesToPatientState
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: AddTaskBottomSheet(
-            addMedicine: _addMedicine,
+            addMedicine: _addMedicine, patient_name: widget.patient_name,
           ),
         ),
       ),
@@ -65,7 +66,7 @@ class _PrescribeMedicinesToPatientState
           _addTask(context);
         },
         tooltip: 'Add Task',
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
       ),
       body: Column(
         children: [
@@ -80,36 +81,46 @@ class _PrescribeMedicinesToPatientState
               itemBuilder: (context, index) {
                 final medicine = prescribedMedicines[index];
                 return Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                  margin: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
                   child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 1,
-                        horizontal: 20), // Padding around the content
-                    tileColor: Colors.grey[300], // Background color
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+                    tileColor: Colors.grey[300],
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(10.0), // Rounded corners
-                      side: BorderSide(color: Colors.grey[300]!), // Border
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: BorderSide(color: Colors.grey[300]!),
                     ),
                     title: Text(
-                      medicine.name,
-                      style: const TextStyle(
+                      'Medicine : ${medicine.name}',
+                      style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: Text(
-                      medicine.quantityAndDays,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Quantity : ${medicine.quantity}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          'Days to take : ${medicine.noDays}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                     trailing: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.delete,
                         color: Colors.red,
                       ),
@@ -129,9 +140,10 @@ class _PrescribeMedicinesToPatientState
 }
 
 class AddTaskBottomSheet extends StatefulWidget {
-  final Function(String name, String quantityAndDays) addMedicine;
+  final Function(String name, String quantity, String noDays) addMedicine;
+  final String patient_name;
 
-  AddTaskBottomSheet({Key? key, required this.addMedicine}) : super(key: key);
+  AddTaskBottomSheet({Key? key, required this.addMedicine, required this.patient_name}) : super(key: key);
 
   @override
   _AddTaskBottomSheetState createState() => _AddTaskBottomSheetState();
@@ -140,9 +152,60 @@ class AddTaskBottomSheet extends StatefulWidget {
 class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   TextEditingController nameController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
+  TextEditingController noDaysController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    void MedicinePrescribedByDoctor(String patientName) async {
+      try {
+        final firestore = FirebaseFirestore.instance;
+        final db = MongoDatabase.getDatabase();
+        if (db == null) {
+          // Handle MongoDB connection error
+          print('Error: MongoDB connection failed');
+          return;
+        }
+        // Insert data into MongoDB
+        final mongoResult =
+            await db.collection('MedicinePrescribedByDoctor').insertOne({
+          'patient name': patientName,
+          'medicine name': nameController.text,
+          'quantitiy': quantityController.text,
+          'no days': noDaysController.text,
+          'date-time': DateTime.now(),
+        });
+
+        if (mongoResult == null) {
+          // Handle MongoDB insertion error
+          print('Error: MongoDB data insertion failed');
+          return;
+        }
+        // Add user data to Firestore
+        await firestore.collection('MedicinePrescribedByDoctor').add(
+          {
+            'patient name': patientName,
+            'medicine name': nameController.text,
+            'quantitiy': quantityController.text,
+            'no days': noDaysController.text,
+            'date-time': DateTime.now(),
+          },
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.blueGrey,
+            content: Text(
+              'Registration Successful',
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
+            ),
+          ),
+        );
+      } catch (e) {
+        print(e);
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.all(25.0),
       child: SingleChildScrollView(
@@ -151,9 +214,10 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
             const Text(
               'Add Medicine',
               style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF083745)),
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF083745),
+              ),
             ),
             const SizedBox(
               height: 20,
@@ -170,12 +234,24 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              child: TextField(
+                autofocus: true,
+                controller: quantityController,
+                decoration: const InputDecoration(
+                  labelText: 'Quantity',
+                  hintText: '6',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
             TextField(
               autofocus: true,
-              controller: quantityController,
+              controller: noDaysController,
               decoration: const InputDecoration(
-                labelText: 'Quantity and Number of Days',
-                hintText: '6 for 3 days',
+                labelText: 'Number of Days',
+                hintText: '3 days',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -193,12 +269,17 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF0B3E68)),
+                    backgroundColor: Color(0xFF0B3E68),
+                  ),
                   onPressed: () {
                     final name = nameController.text;
-                    final quantityAndDays = quantityController.text;
-                    if (name.isNotEmpty && quantityAndDays.isNotEmpty) {
-                      widget.addMedicine(name, quantityAndDays);
+                    final quantity = quantityController.text;
+                    final noDays = noDaysController.text;
+                    if (name.isNotEmpty &&
+                        quantity.isNotEmpty &&
+                        noDays.isNotEmpty) {
+                      widget.addMedicine(name, quantity, noDays);
+                      MedicinePrescribedByDoctor(widget.patient_name);
                     }
                   },
                   child: const Text('Add'),

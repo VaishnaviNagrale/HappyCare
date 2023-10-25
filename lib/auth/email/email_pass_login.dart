@@ -63,10 +63,7 @@ class _EmailPassLoginScreenState extends State<EmailPassLoginScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => NurseHomeScreen(
-                email: userEmail,
-                name: Name,
-                mobile_no: mobileNo,
-                id_no: idNo,
+                userEmail: userEmail,
               ),
             ),
           );

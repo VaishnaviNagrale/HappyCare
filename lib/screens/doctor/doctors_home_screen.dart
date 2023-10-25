@@ -134,7 +134,7 @@ class Patient_List extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        TestListScreen(patient_name: patient_name),
+                        PrescribeTestsToPatient(patient_name: patient_name),
                   ),
                 );
               },

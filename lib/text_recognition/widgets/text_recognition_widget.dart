@@ -9,7 +9,7 @@ import 'controls_widget.dart';
 
 class TextRecognitionWidget extends StatefulWidget {
   const TextRecognitionWidget({
-    super.key,
+    Key? key,
   });
 
   @override
@@ -17,6 +17,7 @@ class TextRecognitionWidget extends StatefulWidget {
 }
 
 class _TextRecognitionWidgetState extends State<TextRecognitionWidget> {
+  bool scanning = false;
   String text = '';
   File? image;
   @override
@@ -46,7 +47,7 @@ class _TextRecognitionWidgetState extends State<TextRecognitionWidget> {
       );
 
   Future pickImage() async {
-   final file = await showImagePicker(context);
+    final file = await showImagePicker(context);
     setImage(File(file!.path));
   }
 
@@ -59,6 +60,13 @@ class _TextRecognitionWidgetState extends State<TextRecognitionWidget> {
     );
 
     final text = await GoogleMLapi.recogniseText(image!);
+    // final text = await FlutterTesseractOcr.extractText(image!.path, args: {
+    //   "psm": "4",
+    //   "preserve_interword_spaces": "1",
+    // });
+    // final textRecognizer = RecognizedText(script: TextRecognitionScript.latin);
+    // final RecognizedText recognizedText = await textRecognizer.processImage(image);
+// String text = recognizedText.text;
     setText(text);
     Navigator.of(context).pop();
   }
@@ -88,7 +96,8 @@ class _TextRecognitionWidgetState extends State<TextRecognitionWidget> {
 }
 
 Future<XFile?> showImagePicker(BuildContext context) async {
-  final completer = Completer<XFile?>(); // Create a Completer to handle the asynchronous operation
+  final completer = Completer<
+      XFile?>(); // Create a Completer to handle the asynchronous operation
 
   showModalBottomSheet(
     context: context,
@@ -122,7 +131,8 @@ Future<XFile?> showImagePicker(BuildContext context) async {
                   ),
                   onTap: () async {
                     final file = await _imgFromGallery(); // Await the result
-                    completer.complete(file); // Complete the future with the selected file
+                    completer.complete(
+                        file); // Complete the future with the selected file
                     Navigator.pop(context);
                   },
                 ),
@@ -148,7 +158,8 @@ Future<XFile?> showImagePicker(BuildContext context) async {
                   ),
                   onTap: () async {
                     final file = await _imgFromCamera(); // Await the result
-                    completer.complete(file); // Complete the future with the selected file
+                    completer.complete(
+                        file); // Complete the future with the selected file
                     Navigator.pop(context);
                   },
                 ),
@@ -169,6 +180,9 @@ Future<XFile?> _imgFromGallery() async {
 }
 
 Future<XFile?> _imgFromCamera() async {
-  final file = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 50);
+  final file = await ImagePicker().pickImage(
+    source: ImageSource.camera,
+    imageQuality: 50,
+  );
   return file;
 }

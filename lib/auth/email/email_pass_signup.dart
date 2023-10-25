@@ -1,10 +1,10 @@
-// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, use_build_context_synchronously
-
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, use_build_context_synchronously, unnecessary_null_comparison
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:happycare/auth/signin_page.dart';
 import 'package:happycare/auth/email/email_pass_login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:happycare/dbHelper/mongodb.dart';
 
 class EmailPassSignUp extends StatefulWidget {
   const EmailPassSignUp({Key? key}) : super(key: key);
@@ -48,6 +48,29 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
         UserCredential userCredentials = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
         final firestore = FirebaseFirestore.instance;
+        final db = MongoDatabase.getDatabase();
+
+      if (db == null) {
+        // Handle MongoDB connection error
+        print('Error: MongoDB connection failed');
+        return;
+      }
+
+      // Insert data into MongoDB
+      final mongoResult = await db.collection('users').insertOne({
+        'name': name,
+        'email': email,
+        'userType': userType.toString(),
+        'mobileNo': mobile_no,
+        'idNo': id_no,
+        'hospitalName': hospital_name,
+      });
+
+      if (mongoResult == null) {
+        // Handle MongoDB insertion error
+        print('Error: MongoDB data insertion failed');
+        return;
+      }
 
         // Add user data to Firestore
         await firestore.collection('users').add({
@@ -58,6 +81,7 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
           'idNo': id_no,
           'hospitalName': hospital_name,
         });
+
         print(userCredentials);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

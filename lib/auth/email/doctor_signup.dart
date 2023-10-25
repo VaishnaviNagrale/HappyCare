@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:happycare/auth/signin_page.dart';
 import 'package:happycare/auth/email/email_pass_login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:happycare/dbHelper/mongodb.dart';
 
 class DoctorEmailPassSignUp extends StatefulWidget {
   const DoctorEmailPassSignUp({Key? key}) : super(key: key);
@@ -64,7 +65,31 @@ class _DoctorEmailPassSignUpState extends State<DoctorEmailPassSignUp> {
         UserCredential userCredentials = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
         final firestore = FirebaseFirestore.instance;
+        final db = MongoDatabase.getDatabase();
         String specialityAsString = speciality.toString().split('.').last;
+
+      if (db == null) {
+        // Handle MongoDB connection error
+        print('Error: MongoDB connection failed');
+        return;
+      }
+
+      // Insert data into MongoDB
+      final mongoResult = await db.collection('users').insertOne({
+        'name': name,
+          'email': email,
+          'userType': userType.toString(),
+          'mobileNo': mobile_no,
+          'idNo': id_no,
+          'hospitalName': hospital_name,
+          'speciality': specialityAsString,
+      });
+
+      if (mongoResult == null) {
+        // Handle MongoDB insertion error
+        print('Error: MongoDB data insertion failed');
+        return;
+      }
         // Add user data to Firestore
         await firestore.collection('users').add({
           'name': name,

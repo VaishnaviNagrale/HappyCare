@@ -1,7 +1,10 @@
 // ignore_for_file: non_constant_identifier_names, camel_case_types, use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:happycare/dbHelper/mongodb.dart';
+import 'package:happycare/screens/staff/assign_nurse/assign_nurse_screen.dart';
 import 'package:happycare/screens/staff/staff_home_screen.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 class AssignDoctorToPatientScreen extends StatelessWidget {
   final String selected_disease_name;
@@ -16,35 +19,32 @@ class AssignDoctorToPatientScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<List<String>> fetchData(String selected_disease_name) async {
-      final firestore = FirebaseFirestore.instance;
-      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
+      final db = MongoDatabase.getDatabase();
+      final userData = await db
           .collection('users')
-          .where('speciality', isEqualTo: selected_disease_name)
-          .get();
+          .find(where.eq('speciality', selected_disease_name))
+          .toList();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        final userData = querySnapshot.docs.first.data();
-        final userType = userData['userType'];
-        final speciality = userData['speciality'];
-        final Name = userData['name'];
+      if (userData != null) {
+        List<String> doctors = [];
 
-        // Now you can check the userType and take appropriate actions.
-        if (userType == 'UserType.doctor' &&
-            speciality == selected_disease_name) {
-          return [Name];
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.blueGrey,
-              content: Text(
-                'User with $userType not found for that email',
-                style: const TextStyle(fontSize: 18.0, color: Colors.amber),
-              ),
-            ),
-          );
+        for (var data in userData) {
+          final doctorname = data['name'];
+          doctors.add(doctorname);
         }
+        return doctors;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.blueGrey,
+            content: Text(
+              'Doctor for $selected_disease_name not found',
+              style: const TextStyle(fontSize: 18.0, color: Colors.amber),
+            ),
+          ),
+        );
+        return [];
       }
-      return [''];
     }
 
     return FutureBuilder<List<String>>(
@@ -104,6 +104,28 @@ class Doctor_List extends StatelessWidget {
     void assignDoctorToPatient(String doctorName) async {
       try {
         final firestore = FirebaseFirestore.instance;
+        final db = MongoDatabase.getDatabase();
+        if (db == null) {
+          // Handle MongoDB connection error
+          print('Error: MongoDB connection failed');
+          return;
+        }
+
+        // Insert data into MongoDB
+        final mongoResult =
+            await db.collection('patient_assign_to_doctor').insertOne({
+          'doctorName': doctorName,
+          'patientName': patient_name,
+          'diseaseName': selected_disease_name,
+          'staffName': staff_name,
+          'date-time': DateTime.now(),
+        });
+
+        if (mongoResult == null) {
+          // Handle MongoDB insertion error
+          print('Error: MongoDB data insertion failed');
+          return;
+        }
         // Update Firestore with assignment information
         await firestore.collection('patient_assign_to_doctor').add(
           {
@@ -122,12 +144,11 @@ class Doctor_List extends StatelessWidget {
             ),
           ),
         );
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => StaffHomeScreen(
-              staff_name: staff_name,
-            ),
+            builder: (context) => AssignNurseToPatientScreen(
+                staff_name: staff_name, patient_name: patient_name),
           ),
         );
       } catch (e) {

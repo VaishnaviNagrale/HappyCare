@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:happycare/dbHelper/mongodb.dart';
 import 'package:happycare/screens/payments/payment_home_screen.dart';
 import 'package:happycare/screens/staff/assign_doctor/diseases_list_screen.dart';
 
@@ -37,6 +38,30 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
         _formKey.currentState!.save();
         try {
           final firestore = FirebaseFirestore.instance;
+          final db = MongoDatabase.getDatabase();
+
+          if (db == null) {
+            // Handle MongoDB connection error
+            print('Error: MongoDB connection failed');
+            return;
+          }
+
+          // Insert data into MongoDB
+          final mongoResult = await db.collection('patients').insertOne({
+            'name': name,
+            'mobileNo': mobile_no,
+            'adharNo': adhar_no,
+            'address': address,
+            'age': age,
+            'gender': isMale,
+            'date-time': DateTime.now(),
+          });
+
+          if (mongoResult == null) {
+            // Handle MongoDB insertion error
+            print('Error: MongoDB data insertion failed');
+            return;
+          }
           // Add user data to Firestore
           await firestore.collection('patients').add(
             {
@@ -46,6 +71,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               'address': address,
               'age': age,
               'gender': isMale,
+              'date-time': DateTime.now(),
             },
           );
           ScaffoldMessenger.of(context).showSnackBar(
