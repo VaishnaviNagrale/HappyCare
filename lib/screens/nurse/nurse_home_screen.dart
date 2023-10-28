@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, camel_case_types
+// ignore_for_file: non_constant_identifier_names, camel_case_types, use_build_context_synchronously
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -89,7 +89,7 @@ class NurseHomeScreen extends StatelessWidget {
             List<String>? patients = snapshot.data;
             return Scaffold(
               appBar: AppBar(
-                backgroundColor: Color(0xFFFF9900),
+                backgroundColor: const Color(0xFFFF9900),
                 title: const Text(
                   'Patients Assigned To Nurse',
                   style: TextStyle(
@@ -125,7 +125,7 @@ class Patient_List extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-          color: Color(0xFFFFF389),
+          color: const Color(0xFFFFF389),
           border: Border.all(
             width: 2,
             color: Colors.black,

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names, unnecessary_null_comparison, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:happycare/dbHelper/mongodb.dart';
@@ -52,7 +54,7 @@ class _PrescribeMedicinesToPatientState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFFF9900),
+        backgroundColor: const Color(0xFFFF9900),
         title: Text(
           'Prescribe medicines to ${widget.patient_name}',
           maxLines: 3,
@@ -61,12 +63,12 @@ class _PrescribeMedicinesToPatientState
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFF28802B),
+        backgroundColor: const Color(0xFF28802B),
         onPressed: () {
           _addTask(context);
         },
         tooltip: 'Add Task',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       body: Column(
         children: [
@@ -81,10 +83,10 @@ class _PrescribeMedicinesToPatientState
               itemBuilder: (context, index) {
                 final medicine = prescribedMedicines[index];
                 return Container(
-                  margin: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                  margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
                   child: ListTile(
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+                        const EdgeInsets.symmetric(vertical: 1, horizontal: 20),
                     tileColor: Colors.grey[300],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -92,7 +94,7 @@ class _PrescribeMedicinesToPatientState
                     ),
                     title: Text(
                       'Medicine : ${medicine.name}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -103,7 +105,7 @@ class _PrescribeMedicinesToPatientState
                       children: [
                         Text(
                           'Quantity : ${medicine.quantity}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15,
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
@@ -111,7 +113,7 @@ class _PrescribeMedicinesToPatientState
                         ),
                         Text(
                           'Days to take : ${medicine.noDays}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15,
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
@@ -120,7 +122,7 @@ class _PrescribeMedicinesToPatientState
                       ],
                     ),
                     trailing: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.delete,
                         color: Colors.red,
                       ),
@@ -143,7 +145,7 @@ class AddTaskBottomSheet extends StatefulWidget {
   final Function(String name, String quantity, String noDays) addMedicine;
   final String patient_name;
 
-  AddTaskBottomSheet({Key? key, required this.addMedicine, required this.patient_name}) : super(key: key);
+  const AddTaskBottomSheet({Key? key, required this.addMedicine, required this.patient_name}) : super(key: key);
 
   @override
   _AddTaskBottomSheetState createState() => _AddTaskBottomSheetState();
@@ -191,7 +193,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
           },
         );
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             backgroundColor: Colors.blueGrey,
             content: Text(
               'Registration Successful',
@@ -269,7 +271,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF0B3E68),
+                    backgroundColor: const Color(0xFF0B3E68),
                   ),
                   onPressed: () {
                     final name = nameController.text;

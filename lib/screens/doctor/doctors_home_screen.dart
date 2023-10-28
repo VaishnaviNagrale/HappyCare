@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, camel_case_types
+// ignore_for_file: non_constant_identifier_names, camel_case_types, use_build_context_synchronously
 
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -91,7 +91,7 @@ class DoctorsHomeScreen extends StatelessWidget {
                 itemCount: patients!.length,
                 itemBuilder: (context, index) {
                   return Patient_List(
-                    patient_name: patients[index],
+                    patient_name: patients[index], id: index,
                   );
                 },
               ),
@@ -105,7 +105,7 @@ class Patient_List extends StatelessWidget {
   final String patient_name;
   const Patient_List({
     super.key,
-    required this.patient_name,
+    required this.patient_name, required int id,
   });
 
   @override

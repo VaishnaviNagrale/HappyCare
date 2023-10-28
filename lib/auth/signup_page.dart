@@ -24,7 +24,7 @@ class _SignUpState extends State<SignUp> {
               height: 100,
               width: 100,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             const Text(
@@ -156,27 +156,25 @@ class _SignUpState extends State<SignUp> {
         const SizedBox(
           height: 20,
         ),
-        Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Have an account?'),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, a, b) => const SignInScreen(),
-                      transitionDuration: const Duration(seconds: 0),
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Sign In',
-                ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Have an account?'),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, a, b) => const SignInScreen(),
+                    transitionDuration: const Duration(seconds: 0),
+                  ),
+                );
+              },
+              child: const Text(
+                'Sign In',
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ]),
     );

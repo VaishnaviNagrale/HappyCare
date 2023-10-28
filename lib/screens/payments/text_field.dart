@@ -4,7 +4,7 @@ Widget textField(Size size, String text, bool isNumerical,
     TextEditingController controller) {
   return Padding(
     padding: EdgeInsets.symmetric(vertical: size.height / 50),
-    child: Container(
+    child: SizedBox(
       height: size.height / 15,
       width: size.width / 1.1,
       child: TextField(

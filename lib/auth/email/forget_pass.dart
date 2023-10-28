@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:happycare/auth/email/email_pass_login.dart';
@@ -20,7 +22,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           backgroundColor: Colors.amber,
           content: Text(
             'Password Reset Email Has Been Sent',
@@ -33,14 +35,14 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => EmailPassLoginScreen(),
+          builder: (context) => const EmailPassLoginScreen(),
         ),
       );
     } on FirebaseAuthException catch (error) {
       if (error.code == 'user-not-found') {
         print('No user found for that email!');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             backgroundColor: Colors.amber,
             content: Text(
               'No user found for that email!',
@@ -66,7 +68,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Reset Password'),
+        title: const Text('Reset Password'),
       ),
       body: Column(
         children: [
@@ -75,8 +77,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             child: Image.asset('assets/images/forget.jpg'),
           ),
           Container(
-            margin: EdgeInsets.only(top: 20.0),
-            child: Text(
+            margin: const EdgeInsets.only(top: 20.0),
+            child: const Text(
               'Reset link will be send to your Email Id',
               style: TextStyle(
                 fontSize: 15.0,
@@ -87,11 +89,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             child: Form(
               key: _formKey,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
                 child: ListView(
                   children: [
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 10.0),
+                      margin: const EdgeInsets.symmetric(vertical: 10.0),
                       child: TextFormField(
                         autofocus: false,
                         keyboardType: TextInputType.emailAddress,
@@ -114,7 +116,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(
+                      margin: const EdgeInsets.symmetric(
                         vertical: 20.0,
                       ),
                       child: Row(
@@ -129,7 +131,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                 ResetPassword();
                               }
                             },
-                            child: Text(
+                            child: const Text(
                               'Send Email',
                               style: TextStyle(
                                 fontSize: 15.0,
@@ -141,11 +143,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EmailPassLoginScreen(),
+                                  builder: (context) => const EmailPassLoginScreen(),
                                 ),
                               );
                             },
-                            child: Text(
+                            child: const Text(
                               'Login',
                               style: TextStyle(
                                 fontSize: 12.0,
@@ -155,30 +157,28 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         ],
                       ),
                     ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Donot have an account?',
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Donot have an account?',
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (context, a, b) => const EmailPassSignUp(),
+                                transitionDuration: const Duration(seconds: 0),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'SignUp',
+                            style: TextStyle(fontSize: 15.0),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (context, a, b) => EmailPassSignUp(),
-                                  transitionDuration: Duration(seconds: 0),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              'SignUp',
-                              style: TextStyle(fontSize: 15.0),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

@@ -13,7 +13,7 @@ class DisaesesListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFFF9900),
+        backgroundColor: const Color(0xFFFF9900),
         title: const Text(
           'List Of Diseases',
           style: TextStyle(
@@ -99,7 +99,7 @@ class Disease_List extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        color: Color(0xFFFFECB3),
+        color: const Color(0xFFFFECB3),
         border: Border.all(
           width: 1,
           color: Colors.blue,

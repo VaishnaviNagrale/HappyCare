@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, use_build_context_synchronously, constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, use_build_context_synchronously, constant_identifier_names, unnecessary_null_comparison
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

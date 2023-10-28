@@ -16,7 +16,7 @@ class TextAreaWidget extends StatelessWidget {
             child: Container(
               height: 100,
               decoration: BoxDecoration(border: Border.all()),
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               alignment: Alignment.center,
               child: SelectableText(
                 text.isEmpty ? 'Scan an Image to get text' : text,
@@ -26,7 +26,7 @@ class TextAreaWidget extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           IconButton(
-            icon: Icon(Icons.copy, color: Colors.black),
+            icon: const Icon(Icons.copy, color: Colors.black),
             color: Colors.grey[200],
             onPressed: onClickedCopy,
           ),

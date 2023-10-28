@@ -12,7 +12,7 @@ class StaffHomeScreen extends StatelessWidget {
     return Scaffold(
       //backgroundColor: Color(0xFF82D7FF),
       appBar: AppBar(
-        backgroundColor: Color(0xFFFF9900),
+        backgroundColor: const Color(0xFFFF9900),
         title: Text(
           'Staff Name: $staff_name',
           style: const TextStyle(fontWeight: FontWeight.bold),
@@ -34,13 +34,13 @@ class StaffHomeScreen extends StatelessWidget {
             ),
             ElevatedButton(
               style:
-                  ElevatedButton.styleFrom(backgroundColor: Color(0xFF044B06)),
+                  ElevatedButton.styleFrom(backgroundColor: const Color(0xFF044B06)),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        AddPatientScreen(staff_name: staff_name),
+                        AddPatientScreen(staffName: staff_name),
                   ),
                 );
               },
@@ -54,7 +54,7 @@ class StaffHomeScreen extends StatelessWidget {
             ),
             ElevatedButton(
               style:
-                  ElevatedButton.styleFrom(backgroundColor: Color(0xFF03FF0C)),
+                  ElevatedButton.styleFrom(backgroundColor: const Color(0xFF03FF0C)),
               onPressed: () {},
               child: const Text(
                 'Discharge Patient',

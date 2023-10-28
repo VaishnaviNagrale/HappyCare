@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:happycare/auth/email/email_pass_login.dart';
@@ -21,7 +23,7 @@ class _ProfileState extends State<Profile> {
       await user!.sendEmailVerification();
       print('Verification email has been sent');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           backgroundColor: Colors.black38,
           content: Text(
             'Verification email has been sent',
@@ -36,20 +38,20 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.symmetric(vertical: 60.0, horizontal: 20.0),
+        margin: const EdgeInsets.symmetric(vertical: 60.0, horizontal: 20.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Image.asset('assets/images/profile.png'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50.0,
               ),
               Column(
                 children: [
-                  Text(
+                  const Text(
                     'User ID: ',
                     style:
                         TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
@@ -57,17 +59,17 @@ class _ProfileState extends State<Profile> {
                   Text(
                     uID,
                     style:
-                        TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
+                        const TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Email: ',
                     style:
                         TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
@@ -75,10 +77,10 @@ class _ProfileState extends State<Profile> {
                   Text(
                     email.toString(),
                     style:
-                        TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
+                        const TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
                   ),
                   user!.emailVerified
-                      ? Text(
+                      ? const Text(
                           'Verified',
                           style: TextStyle(fontSize: 18.0, color: Colors.green),
                         )
@@ -86,7 +88,7 @@ class _ProfileState extends State<Profile> {
                           onPressed: () {
                             VerifyEmail();
                           },
-                          child: Text(
+                          child: const Text(
                             'Verify Email',
                             style: TextStyle(
                               fontSize: 18.0,
@@ -96,12 +98,12 @@ class _ProfileState extends State<Profile> {
                         ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
               Column(
                 children: [
-                  Text(
+                  const Text(
                     'Created: ',
                     style:
                         TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
@@ -109,11 +111,11 @@ class _ProfileState extends State<Profile> {
                   Text(
                     creationTime.toString(),
                     style:
-                        TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
+                        const TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10.0,
               ),
               ElevatedButton(
@@ -122,11 +124,11 @@ class _ProfileState extends State<Profile> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EmailPassLoginScreen(),
+                      builder: (context) => const EmailPassLoginScreen(),
                     ),
                   );
                 },
-                child: Text(
+                child: const Text(
                   'Logout',
                   style: TextStyle(
                     fontSize: 15.0,

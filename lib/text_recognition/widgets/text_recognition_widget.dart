@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:io';
 import 'package:clipboard/clipboard.dart';
@@ -43,7 +45,7 @@ class _TextRecognitionWidgetState extends State<TextRecognitionWidget> {
   Widget buildImage() => Container(
         child: image != null
             ? Image.file(image!)
-            : Icon(Icons.photo, size: 80, color: Colors.black),
+            : const Icon(Icons.photo, size: 80, color: Colors.black),
       );
 
   Future pickImage() async {
@@ -53,7 +55,7 @@ class _TextRecognitionWidgetState extends State<TextRecognitionWidget> {
 
   Future scanText() async {
     showDialog(
-      builder: (context) => Center(
+      builder: (context) => const Center(
         child: CircularProgressIndicator(),
       ),
       context: context,
@@ -114,8 +116,8 @@ Future<XFile?> showImagePicker(BuildContext context) async {
             children: [
               Expanded(
                 child: InkWell(
-                  child: Column(
-                    children: const [
+                  child: const Column(
+                    children: [
                       Icon(
                         Icons.image,
                         size: 40.0,
@@ -139,9 +141,9 @@ Future<XFile?> showImagePicker(BuildContext context) async {
               ),
               Expanded(
                 child: InkWell(
-                  child: SizedBox(
+                  child: const SizedBox(
                     child: Column(
-                      children: const [
+                      children: [
                         Icon(
                           Icons.camera_alt,
                           color: Colors.red,

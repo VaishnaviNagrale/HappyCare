@@ -21,16 +21,16 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             print("Something went wrong");
-            return Scaffold(
+            return const Scaffold(
               body: Center(
                 child: Text("Error Initializing Firebase"),
               ),
             );
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            return SplashScreen();
+            return const SplashScreen();
           }
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),

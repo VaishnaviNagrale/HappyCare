@@ -45,8 +45,6 @@ class _EmailPassLoginScreenState extends State<EmailPassLoginScreen> {
         final userType = userData[
             'userType']; // This will contain 'doctor', 'nurse', or 'staff'.
         final Name = userData['name'];
-        final mobileNo = userData['mobileNo'];
-        final idNo = userData['idNo'];
 
         // Now you can check the userType and take appropriate actions.
         if (userType == 'UserType.doctor') {

@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,7 @@ import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class PatientDetailsScreenNurse extends StatefulWidget {
   final String patientName;
-  PatientDetailsScreenNurse({super.key, required this.patientName});
+  const PatientDetailsScreenNurse({super.key, required this.patientName});
 
   @override
   State<PatientDetailsScreenNurse> createState() => _PatientDetailsScreenNurseState();
@@ -109,23 +109,23 @@ class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
         future: fetchData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No data found'));
+            return const Center(child: Text('No data found'));
           } else {
             final data = snapshot.data;
             return SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'Patient Name: ',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -135,12 +135,12 @@ class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
                         Text('${widget.patientName}'),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'Disease Name: ',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -150,12 +150,12 @@ class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
                         Text('${data!['diseaseType']}'),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'Doctor Assigned Name: ',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -165,7 +165,7 @@ class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
                         Text('${data!['doctorName']}'),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     // Row(
@@ -194,7 +194,7 @@ class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
                     // ),
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'Age: ',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -204,12 +204,12 @@ class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
                         Text('${data['age']}'),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'Gender: ',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -219,7 +219,7 @@ class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
                         Text('${data['gender']}'),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 4,
                     ),
                     // Text('Mobile Number: ${data['mobileNo']}'),
@@ -231,7 +231,7 @@ class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
                     //     'Date Time When Doctor Assigned: ${data['dateDoctorAssigned']}'),
                     Column(
                       children: [
-                        Text(
+                        const Text(
                           'Date Time When Assigned To You: ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -320,7 +320,7 @@ class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
                         const SizedBox(height: 20),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF044B06)),
+                              backgroundColor: const Color(0xFF044B06)),
                           onPressed: () {
                             // Save or update the data in Firestore with the new values.
                             // You can use Firebase or another database to store this data.

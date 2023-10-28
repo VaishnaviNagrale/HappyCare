@@ -109,7 +109,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ),
         centerTitle: true,
       ),
-      body: Container(
+      body: SizedBox(
         height: size.height,
         width: size.width,
         child: SingleChildScrollView(

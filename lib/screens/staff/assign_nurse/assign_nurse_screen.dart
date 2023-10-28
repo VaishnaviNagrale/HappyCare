@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, camel_case_types, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, camel_case_types, use_build_context_synchronously, unnecessary_null_comparison
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:happycare/dbHelper/mongodb.dart';
@@ -30,11 +30,11 @@ class AssignNurseToPatientScreen extends StatelessWidget {
         return nurses;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             backgroundColor: Colors.blueGrey,
             content: Text(
               'Nurses are not avaliable',
-              style: const TextStyle(fontSize: 18.0, color: Colors.amber),
+              style: TextStyle(fontSize: 18.0, color: Colors.amber),
             ),
           ),
         );
