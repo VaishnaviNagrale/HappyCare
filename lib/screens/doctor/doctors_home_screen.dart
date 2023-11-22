@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:happycare/screens/doctor/patient_details_to_doctor_screen.dart';
 import 'package:happycare/screens/doctor/test_list_screen.dart';
 
 class DoctorsHomeScreen extends StatelessWidget {
@@ -134,7 +135,8 @@ class Patient_List extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        PrescribeTestsToPatient(patient_name: patient_name),
+                         PrescribeTestsToPatient(patient_name: patient_name),
+                        //PatientDetailsScreenDoctor(patientName: patient_name),
                   ),
                 );
               },

@@ -1,25 +1,25 @@
 import 'dart:io';
-
 import 'package:google_ml_vision/google_ml_vision.dart';
 
 class GoogleMLapi {
  static Future<String> recogniseText(File imageFile) async {
-    // ignore: unnecessary_null_comparison
-    if (imageFile == null) {
-      return 'No image is selected';
-    } else {
-      final visionImage = GoogleVisionImage.fromFile(imageFile);
-      final textRecognizer = GoogleVision.instance.textRecognizer();
-      try {
-        final visionText = await textRecognizer.processImage(visionImage);
-        await textRecognizer.close();
-        final text = extractText(visionText);
-        return text.isEmpty ? 'No text found in the image' : text;
-      } catch (error) {
-        return error.toString();
-      }
+  if (imageFile == null) {
+    return 'No image is selected';
+  } else {
+    final visionImage = GoogleVisionImage.fromFile(imageFile);
+    final textRecognizer = GoogleVision.instance.textRecognizer();
+print("hello");
+    try {
+      final visionText = await textRecognizer.processImage(visionImage);
+      await textRecognizer.close();
+      final text = extractText(visionText);
+      return text.isEmpty ? 'No text found in the image' : text;
+    } catch (error) {
+      print('Error in text recognition: $error');
+      return error.toString();
     }
   }
+}
 
  static extractText(VisionText visionText) {
     String text = '';

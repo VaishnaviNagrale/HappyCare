@@ -5,6 +5,7 @@ class Patient {
   final String address;
   final int age;
   final bool? gender;
+  final bool? isPaidCheckupFees;
 
   Patient({
     required this.name,
@@ -13,5 +14,6 @@ class Patient {
     required this.address,
     required this.age,
     required this.gender,
+    required this.isPaidCheckupFees,
   });
 }

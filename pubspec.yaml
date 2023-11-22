@@ -50,6 +50,7 @@ dependencies:
   web3dart: ^2.7.1
   http: ^1.1.0
   web_socket_channel: ^2.4.0
+  
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/tessdata/eng.traineddata
+    - assets/PatientContract.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

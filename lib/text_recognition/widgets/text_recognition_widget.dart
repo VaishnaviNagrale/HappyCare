@@ -1,10 +1,10 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
 import 'dart:async';
 import 'dart:io';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:happycare/text_recognition/api/google_ml_api.dart';
+import 'package:flutter_tesseract_ocr/android_ios.dart';
 import 'package:happycare/text_recognition/widgets/text_area_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'controls_widget.dart';
@@ -12,7 +12,7 @@ import 'controls_widget.dart';
 class TextRecognitionWidget extends StatefulWidget {
   const TextRecognitionWidget({
     Key? key,
-  });
+  }) : super(key: key);
 
   @override
   _TextRecognitionWidgetState createState() => _TextRecognitionWidgetState();
@@ -50,27 +50,30 @@ class _TextRecognitionWidgetState extends State<TextRecognitionWidget> {
 
   Future pickImage() async {
     final file = await showImagePicker(context);
+    print("picking image");
     setImage(File(file!.path));
   }
 
   Future scanText() async {
+    print("scanning text");
+    if (image == null) {
+      return;
+    }
     showDialog(
       builder: (context) => const Center(
         child: CircularProgressIndicator(),
       ),
       context: context,
     );
-
-    final text = await GoogleMLapi.recogniseText(image!);
-    // final text = await FlutterTesseractOcr.extractText(image!.path, args: {
-    //   "psm": "4",
-    //   "preserve_interword_spaces": "1",
-    // });
-    // final textRecognizer = RecognizedText(script: TextRecognitionScript.latin);
-    // final RecognizedText recognizedText = await textRecognizer.processImage(image);
-// String text = recognizedText.text;
-    setText(text);
-    Navigator.of(context).pop();
+    try {
+      final text = await FlutterTesseractOcr.extractText(image!.path);
+      print(text);
+      setText(text);
+      //  Navigator.of(context).pop();
+      print("hi");
+    } catch (e) {
+      print('processText() - Error: $e');
+    }
   }
 
   void clear() {
@@ -132,9 +135,8 @@ Future<XFile?> showImagePicker(BuildContext context) async {
                     ],
                   ),
                   onTap: () async {
-                    final file = await _imgFromGallery(); // Await the result
-                    completer.complete(
-                        file); // Complete the future with the selected file
+                    final file = await _imgFromGallery();
+                    completer.complete(file);
                     Navigator.pop(context);
                   },
                 ),

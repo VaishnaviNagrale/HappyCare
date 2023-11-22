@@ -4,29 +4,45 @@ contract PatientContract{
     uint256 public patientCount=0;
 
     struct Patient{
-        uint256 id;
         string p_name;
         string p_mobileNo;
         string p_adharNo;
         string p_address;
-        string p_age;
-        string p_gender;
-        string p_datetime;
+        //uint256 p_datetime;
+        uint256 p_age;
+        bool p_gender;
+        bool p_isPaidCheckupFees;
     }
     mapping(uint256=>Patient) public patients;
 
-    event RegisterPatientToDapp(uint256 id,string p_name,
+    event RegisterPatientToDapp(
+      
+        string p_name,
         string p_mobileNo,
         string p_adharNo,
         string p_address,
-        string p_age,
-        string p_gender,
-        string p_datetime);
+        uint256 p_age,
+        bool p_gender,
+        bool p_isPaidCheckupFees
+        );
     event DeletePatientToDapp(uint256 id);
 
-    function registerPatientDapp(string memory _name,string memory _mobileNo,string memory _adharNo,string memory _address,string memory _age,string memory _gender,string memory _datetime) public {
-        patients[patientCount] = Patient(patientCount,_name,_mobileNo,_adharNo,_address,_age,_gender,_datetime);
-        emit RegisterPatientToDapp(patientCount, _name, _mobileNo, _adharNo, _address, _age, _gender, _datetime);
+    function registerPatientDapp(
+        // uint256 id,
+        string memory p_name,
+        string memory p_mobileNo,
+        string memory p_adharNo,
+        string memory p_address,
+        //uint256 p_datetime,
+        uint256 p_age,
+        bool p_gender,
+        bool p_isPaidCheckupFees
+        ) 
+        public {
+        patients[patientCount] = 
+        Patient(p_name,p_mobileNo,p_adharNo,p_address,p_age,p_gender,p_isPaidCheckupFees);
+
+        emit RegisterPatientToDapp(p_name, p_mobileNo, p_adharNo, p_address, p_age, p_gender,p_isPaidCheckupFees);
         patientCount++;
     }
 

@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -26,13 +25,16 @@ class AddPatientScreen extends StatefulWidget {
 class _AddPatientScreenState extends State<AddPatientScreen> {
   final _formKey = GlobalKey<FormState>();
   List<Patient> patients = [];
-  String name = '';
-  String mobileNo = '';
-  String adharNo = '';
-  String address = '';
-  int? age;
-  bool? isMale;
-  bool? isPaid;
+  final BigInt _id = BigInt.from(1);
+  String _name = '';
+  String _mobileNo = '';
+  String _adharNo = '';
+  String _address = '';
+  final DateTime _date_time = DateTime.now();
+  int? _age;
+  bool? _isMale;
+  bool? _isPaid;
+
   late prefix.Web3Client _web3client;
 
   TextEditingController nameController = TextEditingController();
@@ -46,31 +48,232 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
     super.initState();
     _initializeWeb3Client();
   }
-
+  
   Future<void> _initializeWeb3Client() async {
-    final String rpcUrl =
-        Platform.isAndroid ? 'http://10.0.2.2:7545' : 'http://127.0.0.1:7545';
-    final String wsUrl =
-        Platform.isAndroid ? 'http://10.0.2.2:7545' : 'ws://127.0.0.1:7545';
+    final String rpcUrl ='HTTP://127.0.0.1:7545';
+    final String wsUrl ='ws://127.0.0.1:7545';
     _web3client = prefix.Web3Client(rpcUrl, http.Client(), socketConnector: () {
       return IOWebSocketChannel.connect(wsUrl).cast<String>();
     });
-    getABI();
+    await getABI();
     getCredentials();
     getDeployedContract();
   }
 
-  final String _privatekey =
-      PRIVATE_KEY;
+  final String _privatekey = PRIVATE_KEY;
 
   late prefix.ContractAbi _abiCode;
   late prefix.EthereumAddress _contractAddress;
+
   Future<void> getABI() async {
-    String abiFile =
-        await rootBundle.loadString('build/contracts/NotesContract.json');
+    //String abiFile = await rootBundle.loadString('assets/PatientContract.json');
+    String abiFile = await rootBundle.loadString('assets/PatientContract.json');
+    print(abiFile);
     var jsonABI = jsonDecode(abiFile);
     _abiCode = prefix.ContractAbi.fromJson(
         jsonEncode(jsonABI['abi']), 'PatientContract');
+    print('ABI Code: $_abiCode'); // Add this line to print ABI code
+    //   _abiCode = " [
+    //   {
+    //     "anonymous": false,
+    //     "inputs": [
+    //       {
+    //         "indexed": false,
+    //         "internalType": "uint256",
+    //         "name": "id",
+    //         "type": "uint256"
+    //       }
+    //     ],
+    //     "name": "DeletePatientToDapp",
+    //     "type": "event"
+    //   },
+    //   {
+    //     "anonymous": false,
+    //     "inputs": [
+    //       {
+    //         "indexed": false,
+    //         "internalType": "uint256",
+    //         "name": "id",
+    //         "type": "uint256"
+    //       },
+    //       {
+    //         "indexed": false,
+    //         "internalType": "string",
+    //         "name": "p_name",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "indexed": false,
+    //         "internalType": "string",
+    //         "name": "p_mobileNo",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "indexed": false,
+    //         "internalType": "string",
+    //         "name": "p_adharNo",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "indexed": false,
+    //         "internalType": "string",
+    //         "name": "p_address",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "indexed": false,
+    //         "internalType": "string",
+    //         "name": "p_age",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "indexed": false,
+    //         "internalType": "string",
+    //         "name": "p_gender",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "indexed": false,
+    //         "internalType": "string",
+    //         "name": "p_datetime",
+    //         "type": "string"
+    //       }
+    //     ],
+    //     "name": "RegisterPatientToDapp",
+    //     "type": "event"
+    //   },
+    //   {
+    //     "constant": true,
+    //     "inputs": [],
+    //     "name": "patientCount",
+    //     "outputs": [
+    //       {
+    //         "internalType": "uint256",
+    //         "name": "",
+    //         "type": "uint256"
+    //       }
+    //     ],
+    //     "payable": false,
+    //     "stateMutability": "view",
+    //     "type": "function"
+    //   },
+    //   {
+    //     "constant": true,
+    //     "inputs": [
+    //       {
+    //         "internalType": "uint256",
+    //         "name": "",
+    //         "type": "uint256"
+    //       }
+    //     ],
+    //     "name": "patients",
+    //     "outputs": [
+    //       {
+    //         "internalType": "uint256",
+    //         "name": "id",
+    //         "type": "uint256"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "p_name",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "p_mobileNo",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "p_adharNo",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "p_address",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "p_age",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "p_gender",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "p_datetime",
+    //         "type": "string"
+    //       }
+    //     ],
+    //     "payable": false,
+    //     "stateMutability": "view",
+    //     "type": "function"
+    //   },
+    //   {
+    //     "constant": false,
+    //     "inputs": [
+    //       {
+    //         "internalType": "string",
+    //         "name": "_name",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "_mobileNo",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "_adharNo",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "_address",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "_age",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "_gender",
+    //         "type": "string"
+    //       },
+    //       {
+    //         "internalType": "string",
+    //         "name": "_datetime",
+    //         "type": "string"
+    //       }
+    //     ],
+    //     "name": "registerPatientDapp",
+    //     "outputs": [],
+    //     "payable": false,
+    //     "stateMutability": "nonpayable",
+    //     "type": "function"
+    //   },
+    //   {
+    //     "constant": false,
+    //     "inputs": [
+    //       {
+    //         "internalType": "uint256",
+    //         "name": "_id",
+    //         "type": "uint256"
+    //       }
+    //     ],
+    //     "name": "deletePatientDapp",
+    //     "outputs": [],
+    //     "payable": false,
+    //     "stateMutability": "nonpayable",
+    //     "type": "function"
+    //   }
+    // ]";
     _contractAddress =
         prefix.EthereumAddress.fromHex(jsonABI["networks"]["5777"]["address"]);
   }
@@ -97,30 +300,47 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
   Future<void> _addPatientToBlockchain() async {
     try {
       // Assuming you already have _web3client, _creds, _deployedContract available
-      final BigInt id =
-          BigInt.from(patients.length + 1); // Generate a unique ID
-      final String name = nameController.text;
-      final String mobileNo = mobileNoController.text;
-      final String adharNo = adharNoController.text;
-      final String address = addressController.text;
-      final int age = int.tryParse(ageController.text)!;
-      final bool gender = isMale ?? false;
-      final bool isPaidCheckupFees = isPaid ?? false;
+      BigInt id = BigInt.from(patients.length + 1); // Generate a unique ID
+      String name = nameController.text;
+      String mobileNo = mobileNoController.text;
+      String adharNo = adharNoController.text;
+      String address = addressController.text;
+      // DateTime dateTime = DateTime(2023, 03, 02, 12, 30, 0);
+      // int unixTimestamp = dateTime.millisecondsSinceEpoch ~/ 1000;
+      int age = int.tryParse(ageController.text)!;
+      bool gender = _isMale ?? false;
+      bool isPaidCheckupFees = _isPaid ?? false;
+      // print("seploy contract $_deployedContract");
 
+      // Add debugging to check the values of parameters
+      print('Adding patient to blockchain with the following parameters:');
+      print('id: $id');
+      print('name: $name');
+      print('mobileNo: $mobileNo');
+      print('adharNo: $adharNo');
+      print('address: $address');
+      //print('date_time: $unixTimestamp');
+      print('age: $age');
+      print('gender: $gender');
+      print('isPaidCheckupFees: $isPaidCheckupFees');
+
+      print(_abiCode);
+      print(_contractAddress);
       final transactionHash = await _web3client.sendTransaction(
         _creds,
         prefix.Transaction.callContract(
           contract: _deployedContract,
           function: _createPatient,
           parameters: [
-            id,
-            name,
-            mobileNo,
-            adharNo,
-            address,
-            age,
-            gender,
-            isPaidCheckupFees,
+            // BigInt.from(1), // uint256
+            _name.toString(), // string
+            _mobileNo.toString(), // string
+            _adharNo.toString(), // string
+            _address.toString(), // string
+            // unixTimestamp, // uint256 (make sure it's correctly formatted)
+            _age.toString(), // uint256
+            gender.toString(), // bool
+            isPaidCheckupFees.toString(), // bool
           ],
         ),
       );
@@ -129,6 +349,17 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       final transactionReceipt =
           await _web3client.getTransactionReceipt(transactionHash);
 
+      // if (transactionReceipt!.status != null) {
+      //   Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => DisaesesListScreen(
+      //           staff_name: widget.staffName,
+      //           patient_name: _name,
+      //         ),
+      //       ),
+      //     );
+      // }
       if (transactionReceipt!.status == null) {
         // Transaction is pending
         ScaffoldMessenger.of(context).showSnackBar(
@@ -205,60 +436,68 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
 
           // Insert data into MongoDB
           final mongoResult = await db.collection('patients').insertOne({
-            'name': name,
-            'mobileNo': mobileNo,
-            'adharNo': adharNo,
-            'address': address,
-            'age': age,
-            'gender': isMale,
+            'name': _name,
+            'mobileNo': _mobileNo,
+            'adharNo': _adharNo,
+            'address': _address,
             'date-time': DateTime.now(),
-          });
-
-          if (mongoResult == null) {
-            // Handle MongoDB insertion error
-            print('Error: MongoDB data insertion failed');
-            return;
-          }
-          // Add user data to Firestore
-          await firestore.collection('patients').add(
-            {
-              'name': name,
-              'mobileNo': mobileNo,
-              'adharNo': adharNo,
-              'address': address,
-              'age': age,
-              'gender': isMale,
-              'date-time': DateTime.now(),
-            },
-          );
-          await _addPatientToBlockchain();
-          setState(() {
+            'age': _age,
+            'gender': _isMale,
+            'isFessPaid': _isPaid,
+          }).then((value) => firestore.collection('patients').add({
+            'name': _name,
+            'mobileNo': _mobileNo,
+            'adharNo': _adharNo,
+            'address': _address,
+            'date-time': DateTime.now(),
+            'age': _age,
+            'gender': _isMale,
+            'isFessPaid': _isPaid,
+          }).then((value) => _addPatientToBlockchain()).then((value) => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DisaesesListScreen(
+                staff_name: widget.staffName,
+                patient_name: _name,
+              ),
+            ),
+          )).then((value) => setState(() {
             patients.add(Patient(
-              name: name,
-              mobileNo: mobileNo,
-              adharNo: adharNo,
-              address: address,
-              age: age!,
-              gender: isMale,
+              name: _name,
+              mobileNo: _mobileNo,
+              adharNo: _adharNo,
+              address: _address,
+              age: _age!,
+              gender: _isMale,
+              isPaidCheckupFees: _isPaid,
             ));
-          });
+          })));
+          // print(mongoResult);
+          // if (mongoResult == null) {
+          //   // Handle MongoDB insertion error
+          //   print('Error: MongoDB data insertion failed');
+          //   return;
+          // }
+          // Add user data to Firestore
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               backgroundColor: Colors.blueGrey,
               content: Text(
-                'Registration Successful',
+                'Registration Successful To Database',
                 style: TextStyle(
                   fontSize: 20.0,
                 ),
               ),
             ),
           );
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DisaesesListScreen(
-                staff_name: widget.staffName,
-                patient_name: name,
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.blueGrey,
+              content: Text(
+                'Registration Successful To Blockchain',
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
               ),
             ),
           );
@@ -314,7 +553,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                     return null;
                   },
                   onSaved: (value) {
-                    name = value!;
+                    _name = value!;
                   },
                 ),
               ),
@@ -340,7 +579,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                     return null;
                   },
                   onSaved: (value) {
-                    mobileNo = value!;
+                    _mobileNo = value!;
                   },
                 ),
               ),
@@ -366,7 +605,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                     return null;
                   },
                   onSaved: (value) {
-                    adharNo = value!;
+                    _adharNo = value!;
                   },
                 ),
               ),
@@ -392,7 +631,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                     return null;
                   },
                   onSaved: (value) {
-                    address = value!;
+                    _address = value!;
                   },
                 ),
               ),
@@ -418,17 +657,17 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                     return null;
                   },
                   onSaved: (value) {
-                    age = int.tryParse(value!);
+                    _age = int.tryParse(value!);
                   },
                 ),
               ),
               Row(
                 children: [
                   Checkbox(
-                    value: isMale ?? false,
+                    value: _isMale ?? false,
                     onChanged: (value) {
                       setState(() {
-                        isMale = value;
+                        _isMale = value;
                       });
                     },
                   ),
@@ -445,10 +684,10 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               Row(
                 children: [
                   Checkbox(
-                    value: !(isMale ?? false),
+                    value: !(_isMale ?? false),
                     onChanged: (value) {
                       setState(() {
-                        isMale = !value!;
+                        _isMale = !value!;
                       });
                     },
                   ),
@@ -478,10 +717,10 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               Row(
                 children: [
                   Checkbox(
-                    value: isPaid ?? false,
+                    value: _isPaid ?? false,
                     onChanged: (value) {
                       setState(() {
-                        isPaid = value;
+                        _isPaid = value;
                       });
                     },
                   ),
@@ -497,10 +736,10 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               Row(
                 children: [
                   Checkbox(
-                    value: !(isPaid ?? false),
+                    value: !(_isPaid ?? false),
                     onChanged: (value) {
                       setState(() {
-                        isPaid = !value!;
+                        _isPaid = !value!;
                       });
                     },
                   ),
