@@ -13,7 +13,8 @@ class Test {
 
 class PrescribeTestsToPatient extends StatefulWidget {
   final String patient_name;
-  const PrescribeTestsToPatient({super.key, required this.patient_name});
+  final String doctorEmail;
+  const PrescribeTestsToPatient({super.key, required this.patient_name, required this.doctorEmail});
 
   @override
   State<PrescribeTestsToPatient> createState() =>
@@ -54,7 +55,8 @@ class _PrescribeTestsToPatientState extends State<PrescribeTestsToPatient> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFFF9900),
         title: Text(
-          'Medical tests that should be assigned to ${widget.patient_name}',
+          'Prescribe Medical Tests to ${widget.patient_name}',
+          style: const TextStyle(fontSize: 18),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
@@ -81,7 +83,8 @@ class _PrescribeTestsToPatientState extends State<PrescribeTestsToPatient> {
               itemBuilder: (context, index) {
                 final medicine = prescribedTests[index];
                 return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
                   child: ListTile(
                     contentPadding:
                         const EdgeInsets.symmetric(vertical: 1, horizontal: 20),
@@ -148,6 +151,7 @@ class _PrescribeTestsToPatientState extends State<PrescribeTestsToPatient> {
                     MaterialPageRoute(
                         builder: (context) => PrescribeMedicinesToPatient(
                               patient_name: widget.patient_name,
+                              doctorEmail: widget.doctorEmail,
                             )));
               },
               child: const Text(

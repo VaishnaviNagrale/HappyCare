@@ -1,7 +1,9 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:happycare/auth/signin_page.dart';
 import 'package:happycare/screens/staff/add_patient.dart';
+import 'package:happycare/screens/staff/discharge_patient.dart';
 
 class StaffHomeScreen extends StatelessWidget {
   final String staff_name;
@@ -15,9 +17,20 @@ class StaffHomeScreen extends StatelessWidget {
         backgroundColor: const Color(0xFFFF9900),
         title: Text(
           'Staff Name: $staff_name',
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 18),
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            hoverColor: Colors.black,
+            onPressed: () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const SignInScreen()));
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -33,8 +46,8 @@ class StaffHomeScreen extends StatelessWidget {
               height: 20,
             ),
             ElevatedButton(
-              style:
-                  ElevatedButton.styleFrom(backgroundColor: const Color(0xFF044B06)),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF044B06)),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -53,9 +66,14 @@ class StaffHomeScreen extends StatelessWidget {
               height: 20,
             ),
             ElevatedButton(
-              style:
-                  ElevatedButton.styleFrom(backgroundColor: const Color(0xFF03FF0C)),
-              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF03FF0C)),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const DischargePatientScreen()));
+              },
               child: const Text(
                 'Discharge Patient',
                 style: TextStyle(

@@ -31,10 +31,10 @@ class AssignNurseToPatientScreen extends StatelessWidget {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            backgroundColor: Colors.blueGrey,
+            backgroundColor: Colors.amber,
             content: Text(
               'Nurses are not avaliable',
-              style: TextStyle(fontSize: 18.0, color: Colors.amber),
+              style: TextStyle(fontSize: 18.0, color: Colors.white),
             ),
           ),
         );
@@ -57,9 +57,10 @@ class AssignNurseToPatientScreen extends StatelessWidget {
               appBar: AppBar(
                 backgroundColor: const Color(0xFFFF9900),
                 title: const Text(
-                  'Nurses Avaliable',
+                  'Select Avaliable Nurse',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
                 ),
                 centerTitle: true,
@@ -131,7 +132,7 @@ class Nurse_List extends StatelessWidget {
             backgroundColor: Colors.green,
             content: Text(
               'Nurse assigned successfully!',
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 18.0,color: Colors.white,),
             ),
           ),
         );

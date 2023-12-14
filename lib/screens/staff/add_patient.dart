@@ -25,12 +25,10 @@ class AddPatientScreen extends StatefulWidget {
 class _AddPatientScreenState extends State<AddPatientScreen> {
   final _formKey = GlobalKey<FormState>();
   List<Patient> patients = [];
-  final BigInt _id = BigInt.from(1);
   String _name = '';
   String _mobileNo = '';
   String _adharNo = '';
   String _address = '';
-  final DateTime _date_time = DateTime.now();
   int? _age;
   bool? _isMale;
   bool? _isPaid;
@@ -48,10 +46,10 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
     super.initState();
     _initializeWeb3Client();
   }
-  
+
   Future<void> _initializeWeb3Client() async {
-    final String rpcUrl ='HTTP://127.0.0.1:7545';
-    final String wsUrl ='ws://127.0.0.1:7545';
+    String rpcUrl = 'http://127.0.0.1:7545';
+    String wsUrl = 'ws://127.0.0.1:7545';
     _web3client = prefix.Web3Client(rpcUrl, http.Client(), socketConnector: () {
       return IOWebSocketChannel.connect(wsUrl).cast<String>();
     });
@@ -297,10 +295,10 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
     _patientCount = _deployedContract.function('patientCount');
   }
 
-  Future<void> _addPatientToBlockchain() async {
+  Future<bool> _addPatientToBlockchain() async {
     try {
       // Assuming you already have _web3client, _creds, _deployedContract available
-      BigInt id = BigInt.from(patients.length + 1); // Generate a unique ID
+      // BigInt id = BigInt.from(patients.length + 1); // Generate a unique ID
       String name = nameController.text;
       String mobileNo = mobileNoController.text;
       String adharNo = adharNoController.text;
@@ -314,7 +312,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
 
       // Add debugging to check the values of parameters
       print('Adding patient to blockchain with the following parameters:');
-      print('id: $id');
+      // print('id: $id');
       print('name: $name');
       print('mobileNo: $mobileNo');
       print('adharNo: $adharNo');
@@ -367,9 +365,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
             backgroundColor: Colors.amber,
             content: Text(
               'Transaction is pending',
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
+              style: TextStyle(fontSize: 16.0, color: Colors.white),
             ),
           ),
         );
@@ -382,6 +378,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               'Transaction failed',
               style: TextStyle(
                 fontSize: 16.0,
+                color: Colors.white,
               ),
             ),
           ),
@@ -395,6 +392,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               'Transaction succeeded, data stored in the blockchain',
               style: TextStyle(
                 fontSize: 16.0,
+                color: Colors.white,
               ),
             ),
           ),
@@ -408,13 +406,16 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               'Unknown status, handle accordingly',
               style: TextStyle(
                 fontSize: 16.0,
+                color: Colors.white,
               ),
             ),
           ),
         );
       }
+      return true;
     } catch (e) {
       print('Error adding patient to blockchain: $e');
+      return false;
       // Handle the error accordingly
     }
   }
@@ -425,84 +426,106 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         try {
-          final firestore = FirebaseFirestore.instance;
           final db = MongoDatabase.getDatabase();
+          final firestore = FirebaseFirestore.instance;
 
           if (db == null) {
             // Handle MongoDB connection error
             print('Error: MongoDB connection failed');
             return;
           }
+          final patientData = {
+            'name': _name,
+            'mobileNo': _mobileNo,
+            'adharNo': _adharNo,
+            'address': _address,
+            'age': _age,
+            'gender': _isMale,
+            'date-time': DateTime.now(),
+          };
 
-          // Insert data into MongoDB
-          final mongoResult = await db.collection('patients').insertOne({
+          print('Patient data: $patientData');
+          final mongoResult =
+              await db.collection('patients').insertOne(patientData);
+          print('MongoDB insertion result: $mongoResult');
+
+          if (mongoResult == null) {
+            print('Error: MongoDB insertion failed');
+            return;
+          }
+
+          if (mongoResult.writeConcernError == null) {
+            print('Data inserted successfully into MongoDB');
+
+            // Wait for a moment before searching to ensure data is available
+            await Future.delayed(const Duration(seconds: 1));
+
+            final insertedData = await db
+                .collection('patients')
+                .findOne({'_id': mongoResult.id}); // Search by inserted ID
+
+            if (insertedData != null) {
+              print('Data found in MongoDB collection');
+              // Print the found data
+              print('Inserted Data: $insertedData');
+            } else {
+              print('Data not found in MongoDB collection');
+            }
+          }
+
+          final firestoreResult = await firestore.collection('patients').add({
             'name': _name,
             'mobileNo': _mobileNo,
             'adharNo': _adharNo,
             'address': _address,
-            'date-time': DateTime.now(),
             'age': _age,
             'gender': _isMale,
-            'isFessPaid': _isPaid,
-          }).then((value) => firestore.collection('patients').add({
-            'name': _name,
-            'mobileNo': _mobileNo,
-            'adharNo': _adharNo,
-            'address': _address,
             'date-time': DateTime.now(),
-            'age': _age,
-            'gender': _isMale,
-            'isFessPaid': _isPaid,
-          }).then((value) => _addPatientToBlockchain()).then((value) => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DisaesesListScreen(
-                staff_name: widget.staffName,
-                patient_name: _name,
-              ),
-            ),
-          )).then((value) => setState(() {
-            patients.add(Patient(
-              name: _name,
-              mobileNo: _mobileNo,
-              adharNo: _adharNo,
-              address: _address,
-              age: _age!,
-              gender: _isMale,
-              isPaidCheckupFees: _isPaid,
-            ));
-          })));
-          // print(mongoResult);
-          // if (mongoResult == null) {
-          //   // Handle MongoDB insertion error
-          //   print('Error: MongoDB data insertion failed');
-          //   return;
-          // }
-          // Add user data to Firestore
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.blueGrey,
-              content: Text(
-                'Registration Successful To Database',
-                style: TextStyle(
-                  fontSize: 20.0,
+          });
+          print('Firestore insertion result: $firestoreResult');
+          if (firestoreResult == null) {
+            print('Error: Firestore insertion failed');
+            return;
+          }
+          bool blockchainSuccess = await _addPatientToBlockchain();
+          if (blockchainSuccess == false) {
+            print('Error: Blockchain operation failed');
+            setState(() {
+              patients.add(Patient(
+                name: _name,
+                mobileNo: _mobileNo,
+                adharNo: _adharNo,
+                address: _address,
+                age: _age!,
+                gender: _isMale,
+                isPaidCheckupFees: _isPaid,
+              ));
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                backgroundColor: Colors.green,
+                content: Text(
+                  'Registration Successful',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.blueGrey,
-              content: Text(
-                'Registration Successful To Blockchain',
-                style: TextStyle(
-                  fontSize: 20.0,
+            );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DisaesesListScreen(
+                  staff_name: widget.staffName,
+                  patient_name: _name,
                 ),
               ),
-            ),
-          );
+            );
+            // return;
+          }
         } catch (e) {
-          print(e);
+          print('Exception caught: $e');
         }
       }
     }
@@ -514,7 +537,8 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
         title: const Text(
           'Add New Patient Form',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
+            // fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
         ),
         centerTitle: true,
@@ -548,7 +572,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                   keyboardType: TextInputType.name,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter full name';
+                      return 'please enter patients full name';
                     }
                     return null;
                   },
@@ -574,7 +598,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                   keyboardType: TextInputType.phone,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter mobile number';
+                      return 'Please enter patients mobile number';
+                    } else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
+                      return 'Please enter a valid mobile number';
                     }
                     return null;
                   },
@@ -600,7 +626,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter adhar no';
+                      return 'Please enter patients Aadhar number';
+                    } else if (!RegExp(r'^[0-9]{12}$').hasMatch(value)) {
+                      return 'Please enter a valid 12-digit Aadhar number';
                     }
                     return null;
                   },
@@ -652,7 +680,10 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter age';
+                      return 'Please enter your age';
+                    } else if (int.tryParse(value) == null ||
+                        int.parse(value) <= 0) {
+                      return 'Please enter a valid age';
                     }
                     return null;
                   },

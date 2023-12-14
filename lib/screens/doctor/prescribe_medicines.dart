@@ -3,18 +3,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:happycare/dbHelper/mongodb.dart';
+import 'package:happycare/screens/doctor/doctors_home_screen.dart';
+import 'package:happycare/screens/doctor/medicine.dart';
 
-class Medicine {
-  final String name;
-  final String quantity;
-  final String noDays;
+// class Medicine {
+//   final String name;
+//   final String quantity;
+//   final String noDays;
 
-  Medicine({required this.name, required this.quantity, required this.noDays});
-}
+//   Medicine({required this.name, required this.quantity, required this.noDays});
+// }
 
 class PrescribeMedicinesToPatient extends StatefulWidget {
   final String patient_name;
-  const PrescribeMedicinesToPatient({super.key, required this.patient_name});
+  final String doctorEmail;
+  const PrescribeMedicinesToPatient({super.key, required this.patient_name, required this.doctorEmail});
 
   @override
   State<PrescribeMedicinesToPatient> createState() =>
@@ -43,7 +46,8 @@ class _PrescribeMedicinesToPatientState
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: AddTaskBottomSheet(
-            addMedicine: _addMedicine, patient_name: widget.patient_name,
+            addMedicine: _addMedicine,
+            patient_name: widget.patient_name,
           ),
         ),
       ),
@@ -56,11 +60,27 @@ class _PrescribeMedicinesToPatientState
       appBar: AppBar(
         backgroundColor: const Color(0xFFFF9900),
         title: Text(
-          'Prescribe medicines to ${widget.patient_name}',
+          'Prescribe Medicines to ${widget.patient_name}',
+          style: const TextStyle(fontSize: 18),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
         centerTitle: true,
+        // automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            hoverColor: Colors.black,
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DoctorsHomeScreen(
+                            userEmail: widget.doctorEmail,
+                          )));
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF28802B),
@@ -83,7 +103,8 @@ class _PrescribeMedicinesToPatientState
               itemBuilder: (context, index) {
                 final medicine = prescribedMedicines[index];
                 return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
                   child: ListTile(
                     contentPadding:
                         const EdgeInsets.symmetric(vertical: 1, horizontal: 20),
@@ -145,7 +166,9 @@ class AddTaskBottomSheet extends StatefulWidget {
   final Function(String name, String quantity, String noDays) addMedicine;
   final String patient_name;
 
-  const AddTaskBottomSheet({Key? key, required this.addMedicine, required this.patient_name}) : super(key: key);
+  const AddTaskBottomSheet(
+      {Key? key, required this.addMedicine, required this.patient_name})
+      : super(key: key);
 
   @override
   _AddTaskBottomSheetState createState() => _AddTaskBottomSheetState();

@@ -77,10 +77,10 @@ class _EmailPassLoginScreenState extends State<EmailPassLoginScreen> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              backgroundColor: Colors.blueGrey,
+              backgroundColor: Colors.amber,
               content: Text(
                 'User with $userType not found for that email',
-                style: const TextStyle(fontSize: 18.0, color: Colors.amber),
+                style: const TextStyle(fontSize: 18.0, color: Colors.white),
               ),
             ),
           );
@@ -100,10 +100,10 @@ class _EmailPassLoginScreenState extends State<EmailPassLoginScreen> {
           print('No User Found For that email');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              backgroundColor: Colors.blueGrey,
+              backgroundColor: Colors.amber,
               content: Text(
                 'No User Found For that email. Please check your email or sign up.',
-                style: TextStyle(fontSize: 18.0, color: Colors.amber),
+                style: TextStyle(fontSize: 18.0, color: Colors.white),
               ),
             ),
           );
@@ -111,10 +111,10 @@ class _EmailPassLoginScreenState extends State<EmailPassLoginScreen> {
           print('Wrong password provided by the user');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              backgroundColor: Colors.blueGrey,
+              backgroundColor: Colors.red,
               content: Text(
                 'Incorrect password. Please try again.',
-                style: TextStyle(fontSize: 18.0, color: Colors.red),
+                style: TextStyle(fontSize: 18.0, color: Colors.white),
               ),
             ),
           );
@@ -175,7 +175,9 @@ class _EmailPassLoginScreenState extends State<EmailPassLoginScreen> {
                   controller: passwordController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter password';
+                      return 'Please enter your password';
+                    } else if (value.length < 8) {
+                      return 'Password must be at least 8 characters';
                     }
                     return null;
                   },

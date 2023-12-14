@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:happycare/auth/email/email_pass_login.dart';
+import 'package:happycare/auth/email/patient_login_screen.dart';
 import 'package:happycare/auth/signup_page.dart';
 import 'package:happycare/text_recognition/text_rec_home_screen.dart';
 
@@ -157,6 +158,46 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         ),
         const SizedBox(
+          height: 10,
+        ),
+        Container(
+          margin: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 2,
+              color: Colors.black,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: Image.asset('assets/images/child.png'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PatientLoginScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Sign in as Patient',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(
           height: 20,
         ),
         Row(
@@ -181,7 +222,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFFEF1351),
+            backgroundColor: const Color(0xFFEF1351),
           ),
           onPressed: () {
             Navigator.push(

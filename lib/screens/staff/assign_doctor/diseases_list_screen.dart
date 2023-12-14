@@ -15,9 +15,10 @@ class DisaesesListScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFFFF9900),
         title: const Text(
-          'List Of Diseases',
+          'Select Disease',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
+            // fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
         ),
         centerTitle: true,
@@ -107,7 +108,7 @@ class Disease_List extends StatelessWidget {
       ),
       child: TextButton(
         onPressed: () {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => AssignDoctorToPatientScreen(

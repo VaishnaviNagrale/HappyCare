@@ -12,8 +12,8 @@ class TextRecognitionHomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color(0xFFFF9900),
         title: const Text(
-          'Text Recognition',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          'Text Recognition Screen',
+          style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,
       ),

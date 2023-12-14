@@ -3,6 +3,7 @@ import 'package:google_ml_vision/google_ml_vision.dart';
 
 class GoogleMLapi {
  static Future<String> recogniseText(File imageFile) async {
+  // ignore: unnecessary_null_comparison
   if (imageFile == null) {
     return 'No image is selected';
   } else {

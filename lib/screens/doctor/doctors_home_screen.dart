@@ -3,8 +3,8 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:happycare/auth/signin_page.dart';
 import 'package:happycare/screens/doctor/patient_details_to_doctor_screen.dart';
-import 'package:happycare/screens/doctor/test_list_screen.dart';
 
 class DoctorsHomeScreen extends StatelessWidget {
   final String userEmail;
@@ -53,10 +53,10 @@ class DoctorsHomeScreen extends StatelessWidget {
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              backgroundColor: Colors.blueGrey,
+              backgroundColor: Colors.amber,
               content: Text(
                 'User with $doctor_name not found for that email',
-                style: const TextStyle(fontSize: 18.0, color: Colors.amber),
+                style: const TextStyle(fontSize: 18.0, color: Colors.white),
               ),
             ),
           );
@@ -78,21 +78,36 @@ class DoctorsHomeScreen extends StatelessWidget {
             List<String>? patients = snapshot.data;
             return Scaffold(
               appBar: AppBar(
-                backgroundColor: Color(0xFFFF9900),
+                backgroundColor: const Color(0xFFFF9900),
                 title: const Text(
                   'Patients Assigned To Doctor',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
                   maxLines: 2,
                 ),
                 centerTitle: true,
+                automaticallyImplyLeading: false,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.logout),
+                    hoverColor: Colors.black,
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignInScreen()));
+                    },
+                  ),
+                ],
               ),
               body: ListView.builder(
                 itemCount: patients!.length,
                 itemBuilder: (context, index) {
                   return Patient_List(
-                    patient_name: patients[index], id: index,
+                    patient_name: patients[index],
+                    id: index, doctorEmail: userEmail,
                   );
                 },
               ),
@@ -104,9 +119,11 @@ class DoctorsHomeScreen extends StatelessWidget {
 
 class Patient_List extends StatelessWidget {
   final String patient_name;
+  final String doctorEmail;
   const Patient_List({
     super.key,
-    required this.patient_name, required int id,
+    required this.patient_name,
+    required int id, required this.doctorEmail,
   });
 
   @override
@@ -114,7 +131,7 @@ class Patient_List extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-          color: Color(0xFFFFF389),
+          color: const Color(0xFFFFF389),
           border: Border.all(
             width: 2,
             color: Colors.black,
@@ -135,8 +152,11 @@ class Patient_List extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                         PrescribeTestsToPatient(patient_name: patient_name),
-                        //PatientDetailsScreenDoctor(patientName: patient_name),
+                        //  PrescribeTestsToPatient(patient_name: patient_name),
+                        PatientDetailsScreenDoctor(
+                      patientName: patient_name,
+                      doctorEmail: doctorEmail,
+                    ),
                   ),
                 );
               },

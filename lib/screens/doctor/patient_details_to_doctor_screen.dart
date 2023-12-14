@@ -1,15 +1,15 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, camel_case_types
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:happycare/dbHelper/mongodb.dart';
-import 'package:happycare/screens/doctor/prescribe_medicines.dart';
+import 'package:happycare/screens/doctor/medicine.dart';
 import 'package:happycare/screens/doctor/test_list_screen.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class PatientDetailsScreenDoctor extends StatefulWidget {
   final String patientName;
-  const PatientDetailsScreenDoctor({super.key, required this.patientName});
+  final String doctorEmail;
+  const PatientDetailsScreenDoctor({super.key, required this.patientName, required this.doctorEmail});
 
   @override
   State<PatientDetailsScreenDoctor> createState() =>
@@ -80,9 +80,7 @@ class _PatientDetailsScreenDoctorState
                         const SizedBox(
                           height: 4,
                         ),
-                        const SizedBox(
-                          height: 4,
-                        ),
+                        
                         Row(
                           children: [
                             const Text(
@@ -161,7 +159,7 @@ class _PatientDetailsScreenDoctorState
           ),
           const SizedBox(height: 20),
           const Text(
-            'Medicines :',
+            'Medicines',
             style: TextStyle(
               color: Colors.blue, // Professional color
               decoration: TextDecoration.underline,
@@ -170,7 +168,7 @@ class _PatientDetailsScreenDoctorState
               fontWeight: FontWeight.w600,
             ),
           ),
-          FutureBuilder<List<String>>(
+          FutureBuilder<List<Medicine>>(
             future: fetchMedicineData(widget.patientName),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -180,21 +178,19 @@ class _PatientDetailsScreenDoctorState
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(child: Text('No data found'));
               } else {
-                final data = snapshot.data;
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 16),
-                    child: ListView.builder(
-                      itemCount: data!.length,
-                      itemBuilder: (context, index) {
-                        return Medicine_List(
-                          medicine_name: data[index],
-                          quantity: data[index],
-                          noDays: data[index],
-                        );
-                      },
-                    ),
+                List<Medicine>? data = snapshot.data;
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: data!.length,
+                    itemBuilder: (context, index) {
+                      final medicine = data[index];
+                      // print(medicine.name);
+                      return Medicine_List(
+                        medicine_name: medicine.name,
+                        quantity: medicine.quantity,
+                        noDays: medicine.noDays,
+                      );
+                    },
                   ),
                 );
               }
@@ -202,7 +198,7 @@ class _PatientDetailsScreenDoctorState
           ),
           const SizedBox(height: 20),
           const Text(
-            'Tests :',
+            'Tests',
             style: TextStyle(
               color: Colors.blue, // Professional color
               decoration: TextDecoration.underline,
@@ -222,69 +218,67 @@ class _PatientDetailsScreenDoctorState
                 return const Center(child: Text('No data found'));
               } else {
                 List<String>? data = snapshot.data;
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 16),
-                    child: ListView.builder(
-                      itemCount: data!.length,
-                      itemBuilder: (context, index) {
-                        return Tests_List(
-                            test_name: data[index], date_time: data[index]);
-                      },
-                    ),
+                return Expanded(
+                  // Provide proper constraints using Expanded
+                  child: ListView.builder(
+                    itemCount: data!.length,
+                    itemBuilder: (context, index) {
+                      return Tests_List(
+                        test_name: data[index],
+                        date_time: data[index], // Replace with relevant data
+                      );
+                    },
                   ),
                 );
               }
             },
           ),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PrescribeMedicinesToPatient(
-                            patient_name: widget.patientName)));
-              },
-              child: Text('Prescribe Medicine')),
+          // ElevatedButton(
+          //     style: ElevatedButton.styleFrom(backgroundColor: Colors.blueGrey),
+          //     onPressed: () {
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //               builder: (context) => PrescribeMedicinesToPatient(
+          //                   patient_name: widget.patientName)));
+          //     },
+          //     child: Text('Prescribe Medicine')),
           ElevatedButton(
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => PrescribeTestsToPatient(
-                            patient_name: widget.patientName)));
+                            patient_name: widget.patientName, doctorEmail: widget.doctorEmail,)));
               },
-              child: Text('    Prescribe Tests   ')),
+              child: const Text('    Prescribe   ')),
         ],
       ),
     );
   }
 
-  Future<List<String>> fetchMedicineData(String patient_name) async {
+  Future<List<Medicine>> fetchMedicineData(String patient_name) async {
     final db = MongoDatabase.getDatabase();
     final cursor = db.collection('MedicinePrescribedByDoctor').find(
           mongo.where.eq('patient name', patient_name),
         );
 
-    final List<String> medicines = [];
+    final List<Medicine> medicines = [];
 
     await for (var data in cursor) {
       final medicinename = data['medicine name'];
-      final quantity = data['quantity'];
-      final noDays = data['no of days'];
-      final dateTime = data['date-time'];
-      medicines.add(medicinename);
-      medicines.add(quantity);
-      medicines.add(noDays);
-      medicines.add(dateTime);
+      final quantity = data['quantitiy'];
+      final noDays = data['no days'];
+
+      final medicine = Medicine(
+        name: medicinename,
+        quantity: quantity,
+        noDays: noDays,
+      );
+      print(medicine);
+      medicines.add(medicine);
     }
 
-    if (medicines.isEmpty) {
-      // No medicines prescribed to patient yet
-      return [];
-    }
-    print('medData: $medicines');
     return medicines;
   }
 
@@ -324,12 +318,12 @@ class _PatientDetailsScreenDoctorState
           .collection('patients')
           .findOne(mongo.where.eq('name', widget.patientName));
 
-      // print('Nurse Data: $nurseData');
-      // print('Doctor Data: $doctorData');
-      // print('Patients Data: $patientsData');
+      print('Nurse Data: $nurseData');
+      print('Doctor Data: $doctorData');
+      print('Patients Data: $patientsData');
 
-      await fetchMedicineData(widget.patientName);
-      await fetchTestsData(widget.patientName);
+      // await fetchMedicineData(widget.patientName);
+      // await fetchTestsData(widget.patientName);
 
       if (nurseData != null && doctorData != null && patientsData != null) {
         return {
@@ -372,35 +366,85 @@ class Medicine_List extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-          color: Color(0xFFFFF389),
+          color: const Color(0xFFFFF389),
           border: Border.all(
             width: 2,
             color: Colors.black,
           )),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 2),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // SizedBox(
-            //   height: 50,
-            //   width: 50,
-            //   child: Image.asset('assets/images/child.png'),
-            // ),
-            Text(
-              medicine_name,
-              style: const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.w600),
-            ),
-            Text(
-              quantity,
-              style: const TextStyle(color: Colors.black),
-            ),
-            Text(
-              noDays,
-              style: const TextStyle(color: Colors.black),
-            ),
-          ],
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+          tileColor: Colors.grey[300],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            side: BorderSide(color: Colors.grey[300]!),
+          ),
+          title: Row(
+            children: [
+              const Text(
+                'Medicine Name :',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                ' $medicine_name',
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Text(
+                    'Quantity :',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    ' $quantity',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text(
+                    'Days to Take :',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    ' $noDays',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -421,7 +465,7 @@ class Tests_List extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-          color: Color(0xFFFFF389),
+          color: const Color(0xFFFFF389),
           border: Border.all(
             width: 2,
             color: Colors.black,
@@ -436,13 +480,72 @@ class Tests_List extends StatelessWidget {
               style: const TextStyle(
                   color: Colors.black, fontWeight: FontWeight.w600),
             ),
-            Text(
-              date_time,
-              style: const TextStyle(color: Colors.black),
-            ),
+            // Text(
+            //   date_time,
+            //   style: const TextStyle(color: Colors.black),
+            // ),
           ],
         ),
       ),
     );
   }
 }
+// FutureBuilder<List<String>>(
+          //   future: fetchMedicineData(widget.patientName),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.connectionState == ConnectionState.waiting) {
+          //       return const Center(child: CircularProgressIndicator());
+          //     } else if (snapshot.hasError) {
+          //       return Center(child: Text('Error: ${snapshot.error}'));
+          //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          //       return const Center(child: Text('No data found'));
+          //     } else {
+          //       final data = snapshot.data;
+          //       return SingleChildScrollView(
+          //         child: Padding(
+          //           padding: const EdgeInsets.symmetric(
+          //               horizontal: 20, vertical: 16),
+          //           child: ListView.builder(
+          //             itemCount: data!.length,
+          //             itemBuilder: (context, index) {
+          //               return Medicine_List(
+          //                 medicine_name: data[index],
+          //                 quantity: data[index],
+          //                 noDays: data[index],
+          //               );
+          //             },
+          //           ),
+          //         ),
+          //       );
+          //     }
+          //   },
+          // ),
+
+
+                 // FutureBuilder<List<String>>(
+          //   future: fetchTestsData(widget.patientName),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.connectionState == ConnectionState.waiting) {
+          //       return const Center(child: CircularProgressIndicator());
+          //     } else if (snapshot.hasError) {
+          //       return Center(child: Text('Error: ${snapshot.error}'));
+          //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          //       return const Center(child: Text('No data found'));
+          //     } else {
+          //       List<String>? data = snapshot.data;
+          //       return SingleChildScrollView(
+          //         child: Padding(
+          //           padding: const EdgeInsets.symmetric(
+          //               horizontal: 20, vertical: 16),
+          //           child: ListView.builder(
+          //             itemCount: data!.length,
+          //             itemBuilder: (context, index) {
+          //               return Tests_List(
+          //                   test_name: data[index], date_time: data[index]);
+          //             },
+          //           ),
+          //         ),
+          //       );
+          //     }
+          //   },
+          // ),

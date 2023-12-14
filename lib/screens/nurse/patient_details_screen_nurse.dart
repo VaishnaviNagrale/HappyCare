@@ -1,8 +1,9 @@
-// ignore_for_file: non_constant_identifier_names
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: non_constant_identifier_names, camel_case_types
 import 'package:flutter/material.dart';
 import 'package:happycare/dbHelper/mongodb.dart';
+import 'package:happycare/screens/doctor/medicine.dart';
+import 'package:happycare/screens/nurse/medicine_update_nurse.dart';
+import 'package:happycare/screens/nurse/test_update_nurse.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class PatientDetailsScreenNurse extends StatefulWidget {
@@ -10,92 +11,13 @@ class PatientDetailsScreenNurse extends StatefulWidget {
   const PatientDetailsScreenNurse({super.key, required this.patientName});
 
   @override
-  State<PatientDetailsScreenNurse> createState() => _PatientDetailsScreenNurseState();
+  State<PatientDetailsScreenNurse> createState() =>
+      _PatientDetailsScreenNurseState();
 }
 
 class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
-  String morningMedicine = '';
-
-  String eveningMedicine = '';
-
-  String nightMedicine = '';
-
-  String bloodTest = '';
-
-  String sugarTest = '';
-
-  String bpTest = '';
-
-  String temperature = '';
-
-  String ecgTest = '';
-
-  String xRayTest = '';
-
   @override
   Widget build(BuildContext context) {
-    void PatientReportUpdatesByNurse() async {
-      try {
-        final firestore = FirebaseFirestore.instance;
-        final db = MongoDatabase.getDatabase();
-        if (db == null) {
-          // Handle MongoDB connection error
-          print('Error: MongoDB connection failed');
-          return;
-        }
-        // Insert data into MongoDB
-        final mongoResult =
-            await db.collection('PatientReportUpdatesByNurse').insertOne({
-          'patient name': widget.patientName,
-          'blood test': bloodTest,
-          'sugar test': sugarTest,
-          'BP test': bpTest,
-          'temperature': temperature,
-          'ECG test': ecgTest,
-          'X-ray': xRayTest,
-          'morning medicine': morningMedicine,
-          'evening medicine': eveningMedicine,
-          'night medicine': nightMedicine,
-          'date-time': DateTime.now(),
-        });
-
-        if (mongoResult == null) {
-          // Handle MongoDB insertion error
-          print('Error: MongoDB data insertion failed');
-          return;
-        }
-        // Add user data to Firestore
-        await firestore.collection('PatientReportUpdatesByNurse').add(
-          {
-            'patient name': widget.patientName,
-            'blood test': bloodTest,
-            'sugar test': sugarTest,
-            'BP test': bpTest,
-            'temperature': temperature,
-            'ECG test': ecgTest,
-            'X-ray': xRayTest,
-            'morning medicine': morningMedicine,
-            'evening medicine': eveningMedicine,
-            'night medicine': nightMedicine,
-            'date-time': DateTime.now(),
-          },
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.blueGrey,
-            content: Text(
-              'Registration Successful',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-          ),
-        );
-      } catch (e) {
-        print(e);
-      }
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFFF9900),
@@ -105,260 +27,256 @@ class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
         ),
         centerTitle: true,
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: fetchData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No data found'));
-          } else {
-            final data = snapshot.data;
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
+      body: Column(
+        children: [
+          FutureBuilder<Map<String, dynamic>>(
+            future: fetchData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('No data found'));
+              } else {
+                final data = snapshot.data;
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'Patient Name: ',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Color(0xFF07187A)),
+                        Row(
+                          children: [
+                            const Text(
+                              'Patient Name: ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color(0xFF07187A)),
+                            ),
+                            Text(widget.patientName),
+                          ],
                         ),
-                        Text('${widget.patientName}'),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    Row(
-                      children: [
-                        const Text(
-                          'Disease Name: ',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Color(0xFF07187A)),
+                        const SizedBox(
+                          height: 4,
                         ),
-                        Text('${data!['diseaseType']}'),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    Row(
-                      children: [
-                        const Text(
-                          'Doctor Assigned Name: ',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Color(0xFF07187A)),
+                        Row(
+                          children: [
+                            const Text(
+                              'Disease Name: ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color(0xFF07187A)),
+                            ),
+                            Text('${data!['diseaseType']}'),
+                          ],
                         ),
-                        Text('${data!['doctorName']}'),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    // Row(
-                    //   children: [
-                    //     Text(
-                    //       'Nurse Assigned Name: ',
-                    //       style: TextStyle(
-                    //           fontWeight: FontWeight.bold,
-                    //           fontSize: 14,
-                    //           color: Color(0xFF07187A)),
-                    //     ),
-                    //     Text('${data!['nurseName']}'),
-                    //   ],
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Text(
-                    //       'Staff That Registered Name: ',
-                    //       style: TextStyle(
-                    //           fontWeight: FontWeight.bold,
-                    //           fontSize: 14,
-                    //           color: Color(0xFF07187A)),
-                    //     ),
-                    //     Text('${data['staffAssigned']}'),
-                    //   ],
-                    // ),
-                    Row(
-                      children: [
-                        const Text(
-                          'Age: ',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Color(0xFF07187A)),
+                        const SizedBox(
+                          height: 4,
                         ),
-                        Text('${data['age']}'),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    Row(
-                      children: [
-                        const Text(
-                          'Gender: ',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Color(0xFF07187A)),
+                        Row(
+                          children: [
+                            const Text(
+                              'Doctor Assigned Name: ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color(0xFF07187A)),
+                            ),
+                            Text('${data!['doctorName']}'),
+                          ],
                         ),
-                        Text('${data['gender']}'),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    // Text('Mobile Number: ${data['mobileNo']}'),
-                    // Text('Adhar Number: ${data['adharNo']}'),
-                    // Text('Address: ${data['address']}'),
-                    // Text(
-                    //     'Date Time When Registered: ${data['datePatientRegistered']}'),
-                    // Text(
-                    //     'Date Time When Doctor Assigned: ${data['dateDoctorAssigned']}'),
-                    Column(
-                      children: [
-                        const Text(
-                          'Date Time When Assigned To You: ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: Color(0xFF07187A),
-                          ),
+                        const SizedBox(
+                          height: 4,
                         ),
-                        Text(
-                          '${data['dateNurseAssigned']}',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
 
-                    Column(
-                      children: [
-                        const Text(
-                          'Tests',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline,
-                            decorationThickness: 2,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Row(
+                          children: [
+                            const Text(
+                              'Age: ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color(0xFF07187A)),
+                            ),
+                            Text('${data['age']}'),
+                          ],
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 4,
                         ),
-                        Card(
-                          elevation: 3, // Add a slight shadow for a card effect
-                          margin: const EdgeInsets.all(8),
-                          child: Column(
-                            children: [
-                              _buildTestItem("Blood Test", bloodTest,
-                                  (value) => bloodTest = value),
-                              _buildTestItem("Sugar Test", sugarTest,
-                                  (value) => sugarTest = value),
-                              _buildTestItem(
-                                  "BP Test", bpTest, (value) => bpTest = value),
-                              _buildTestItem("Temperature (°C)", temperature,
-                                  (value) => temperature = value),
-                              _buildTestItem(
-                                  "ECG", ecgTest, (value) => ecgTest = value),
-                              _buildTestItem("X-ray", xRayTest,
-                                  (value) => xRayTest = value),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'Medicines :',
-                          style: TextStyle(
-                            color: Colors.blue, // Professional color
-                            decoration: TextDecoration.underline,
-                            decorationThickness: 2,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Row(
+                          children: [
+                            const Text(
+                              'Gender: ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color(0xFF07187A)),
+                            ),
+                            Text('${data['gender']}'),
+                          ],
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 4,
                         ),
-                        Card(
-                          elevation: 3, // Add a slight shadow for a card effect
-                          margin: const EdgeInsets.all(8),
-                          child: Column(
-                            children: [
-                              _buildMedicineItem(
-                                  "Morning Medicine",
-                                  morningMedicine,
-                                  (value) => morningMedicine = value),
-                              _buildMedicineItem(
-                                  "Evening Medicine",
-                                  eveningMedicine,
-                                  (value) => eveningMedicine = value),
-                              _buildMedicineItem(
-                                  "Night Medicine",
-                                  nightMedicine,
-                                  (value) => nightMedicine = value),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF044B06)),
-                          onPressed: () {
-                            // Save or update the data in Firestore with the new values.
-                            // You can use Firebase or another database to store this data.
-                            // For simplicity, we're just printing the updated values here.
-                            print('Morning Medicine: $morningMedicine');
-                            print('Evening Medicine: $eveningMedicine');
-                            print('Night Medicine: $nightMedicine');
-                            print('Blood Test: $bloodTest');
-                            print('Sugar Test: $sugarTest');
-                            print('BP Test: $bpTest');
-                            print('Temperature: $temperature°C');
-                            print('ECG: $ecgTest');
-                            print('X-ray: $xRayTest');
-                            PatientReportUpdatesByNurse();
-                            setState(() {
-                              morningMedicine = '';
-                              eveningMedicine = '';
-                              nightMedicine = '';
-                              bloodTest = '';
-                              sugarTest = '';
-                              bpTest = '';
-                              temperature = '';
-                              ecgTest = '';
-                              xRayTest = '';
-                            });
-                          },
-                          child: const Text('Save Changes'),
+                        // Text('Mobile Number: ${data['mobileNo']}'),
+                        // Text('Adhar Number: ${data['adharNo']}'),
+                        // Text('Address: ${data['address']}'),
+                        // Text(
+                        //     'Date Time When Registered: ${data['datePatientRegistered']}'),
+                        // Text(
+                        //     'Date Time When Doctor Assigned: ${data['dateDoctorAssigned']}'),
+                        Column(
+                          children: [
+                            const Text(
+                              'Date Time When Assigned To You: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Color(0xFF07187A),
+                              ),
+                            ),
+                            Text(
+                              '${data['dateNurseAssigned']}',
+                            ),
+                          ],
                         ),
                       ],
-                    )
-                  ],
-                ),
-              ),
-            );
-          }
-        },
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+          const Text(
+            'Medicines',
+            style: TextStyle(
+              color: Colors.blue, // Professional color
+              decoration: TextDecoration.underline,
+              decorationThickness: 2,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          FutureBuilder<List<Medicine>>(
+            future: fetchMedicineData(widget.patientName),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('No data found'));
+              } else {
+                List<Medicine>? data = snapshot.data;
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: data!.length,
+                    itemBuilder: (context, index) {
+                      final medicine = data[index];
+                      // print(medicine.name);
+                      return Medicine_List(
+                        medicine_name: medicine.name,
+                        quantity: medicine.quantity,
+                        noDays: medicine.noDays,
+                      );
+                    },
+                  ),
+                );
+              }
+            },
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Tests',
+            style: TextStyle(
+              color: Colors.blue, // Professional color
+              decoration: TextDecoration.underline,
+              decorationThickness: 2,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          FutureBuilder<List<String>>(
+            future: fetchTestsData(widget.patientName),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('No data found'));
+              } else {
+                List<String>? data = snapshot.data;
+                return Expanded(
+                  // Provide proper constraints using Expanded
+                  child: ListView.builder(
+                    itemCount: data!.length,
+                    itemBuilder: (context, index) {
+                      return Tests_List(
+                        test_name: data[index],
+                        date_time: data[index], // Replace with relevant data
+                      );
+                    },
+                  ),
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
+  }
+
+  Future<List<Medicine>> fetchMedicineData(String patient_name) async {
+    final db = MongoDatabase.getDatabase();
+    final cursor = db.collection('MedicinePrescribedByDoctor').find(
+          mongo.where.eq('patient name', patient_name),
+        );
+
+    final List<Medicine> medicines = [];
+
+    await for (var data in cursor) {
+      final medicinename = data['medicine name'];
+      final quantity = data['quantitiy'];
+      final noDays = data['no days'];
+
+      final medicine = Medicine(
+        name: medicinename,
+        quantity: quantity,
+        noDays: noDays,
+      );
+      print(medicine);
+      medicines.add(medicine);
+    }
+
+    return medicines;
+  }
+
+  Future<List<String>> fetchTestsData(String patient_name) async {
+    final db = MongoDatabase.getDatabase();
+    final cursor = db.collection('TestPrescribedByDoctor').find(
+          mongo.where.eq('patient name', patient_name),
+        );
+
+    final List<String> tests = [];
+
+    await for (var data in cursor) {
+      final testName = data['test name'];
+      tests.add(testName);
+    }
+
+    if (tests.isEmpty) {
+      // No medicines prescribed to patient yet
+      return [];
+    }
+    print('tests Data: $tests');
+    return tests;
   }
 
   Future<Map<String, dynamic>> fetchData() async {
@@ -405,23 +323,163 @@ class _PatientDetailsScreenNurseState extends State<PatientDetailsScreenNurse> {
   }
 }
 
-Widget _buildTestItem(String label, String value, Function(String) onChanged) {
-  return ListTile(
-    title: TextFormField(
-      initialValue: value,
-      onChanged: onChanged,
-      decoration: InputDecoration(labelText: label),
-    ),
-  );
+class Medicine_List extends StatelessWidget {
+  final String medicine_name;
+  final String quantity;
+  final String noDays;
+  const Medicine_List({
+    super.key,
+    required this.medicine_name,
+    required this.quantity,
+    required this.noDays,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+          color: const Color(0xFFFFF389),
+          border: Border.all(
+            width: 2,
+            color: Colors.black,
+          )),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+          tileColor: Colors.grey[300],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            side: BorderSide(color: Colors.grey[300]!),
+          ),
+          title: Row(
+            children: [
+              const Text(
+                'Medicine Name :',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                ' $medicine_name',
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Text(
+                    'Quantity :',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    ' $quantity',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text(
+                    'Days to Take :',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    ' $noDays',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          trailing: IconButton(
+            icon: const Icon(
+              Icons.edit,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MedicineUpdateNurse(
+                          medicine_name: medicine_name,
+                          quantity: quantity,
+                          noDays: int.parse(noDays))));
+            },
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-Widget _buildMedicineItem(
-    String label, String value, Function(String) onChanged) {
-  return ListTile(
-    title: TextFormField(
-      initialValue: value,
-      onChanged: onChanged,
-      decoration: InputDecoration(labelText: label),
-    ),
-  );
+class Tests_List extends StatelessWidget {
+  final String test_name;
+  final String date_time;
+  const Tests_List({
+    super.key,
+    required this.test_name,
+    required this.date_time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+          color: const Color(0xFFFFF389),
+          border: Border.all(
+            width: 2,
+            color: Colors.black,
+          )),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              test_name,
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.w600),
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.edit,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>TestUpdateNurse(test_name: test_name)));
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

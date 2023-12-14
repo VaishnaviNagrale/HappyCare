@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:happycare/dbHelper/mongodb.dart';
 import 'package:happycare/screens/staff/assign_nurse/assign_nurse_screen.dart';
-import 'package:happycare/screens/staff/staff_home_screen.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class AssignDoctorToPatientScreen extends StatelessWidget {
@@ -36,10 +35,10 @@ class AssignDoctorToPatientScreen extends StatelessWidget {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            backgroundColor: Colors.blueGrey,
+            backgroundColor: Colors.amber,
             content: Text(
               'Doctor for $selected_disease_name not found',
-              style: const TextStyle(fontSize: 18.0, color: Colors.amber),
+              style: const TextStyle(fontSize: 18.0,color: Colors.white,),
             ),
           ),
         );
@@ -62,10 +61,12 @@ class AssignDoctorToPatientScreen extends StatelessWidget {
               appBar: AppBar(
                 backgroundColor: Color(0xFFFF9900),
                 title: Text(
-                  'Doctors For $selected_disease_name Disease',
+                  'Select Doctor For $selected_disease_name Disease',
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
+                  maxLines: 2,
                 ),
                 centerTitle: true,
               ),
@@ -140,11 +141,11 @@ class Doctor_List extends StatelessWidget {
             backgroundColor: Colors.green,
             content: Text(
               'Doctor assigned successfully!',
-              style: TextStyle(fontSize: 18.0),
+              style: TextStyle(fontSize: 18.0,color: Colors.white,),
             ),
           ),
         );
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => AssignNurseToPatientScreen(
@@ -193,9 +194,9 @@ class Doctor_List extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => StaffHomeScreen(
-                            staff_name: staff_name,
-                          ),
+                          builder: (context) => AssignNurseToPatientScreen(
+                              staff_name: staff_name,
+                              patient_name: patient_name),
                         ),
                       ); // Close the dialog
                     },

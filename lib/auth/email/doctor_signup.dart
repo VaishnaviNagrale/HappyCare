@@ -123,12 +123,12 @@ class _DoctorEmailPassSignUpState extends State<DoctorEmailPassSignUp> {
           print('Password is too weak');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              backgroundColor: Colors.black26,
+              backgroundColor: Colors.amber,
               content: Text(
                 'Password is too weak',
                 style: TextStyle(
                   fontSize: 20.0,
-                  color: Colors.amberAccent,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -137,12 +137,12 @@ class _DoctorEmailPassSignUpState extends State<DoctorEmailPassSignUp> {
           print('Account is already exits');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              backgroundColor: Colors.black26,
+              backgroundColor: Colors.amber,
               content: Text(
                 'Account is already exits',
                 style: TextStyle(
                   fontSize: 20.0,
-                  color: Colors.amber,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -151,12 +151,12 @@ class _DoctorEmailPassSignUpState extends State<DoctorEmailPassSignUp> {
           print(error);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              backgroundColor: Colors.black26,
+              backgroundColor: Colors.red,
               content: Text(
                 'Password and Conform Password does not matched',
                 style: TextStyle(
                   fontSize: 20.0,
-                  color: Colors.red,
+                  color: Colors.white,
                 ),
               ),
             ),

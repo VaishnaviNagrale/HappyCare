@@ -50,27 +50,27 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
         final firestore = FirebaseFirestore.instance;
         final db = MongoDatabase.getDatabase();
 
-      if (db == null) {
-        // Handle MongoDB connection error
-        print('Error: MongoDB connection failed');
-        return;
-      }
+        if (db == null) {
+          // Handle MongoDB connection error
+          print('Error: MongoDB connection failed');
+          return;
+        }
 
-      // Insert data into MongoDB
-      final mongoResult = await db.collection('users').insertOne({
-        'name': name,
-        'email': email,
-        'userType': userType.toString(),
-        'mobileNo': mobile_no,
-        'idNo': id_no,
-        'hospitalName': hospital_name,
-      });
+        // Insert data into MongoDB
+        final mongoResult = await db.collection('users').insertOne({
+          'name': name,
+          'email': email,
+          'userType': userType.toString(),
+          'mobileNo': mobile_no,
+          'idNo': id_no,
+          'hospitalName': hospital_name,
+        });
 
-      if (mongoResult == null) {
-        // Handle MongoDB insertion error
-        print('Error: MongoDB data insertion failed');
-        return;
-      }
+        if (mongoResult == null) {
+          // Handle MongoDB insertion error
+          print('Error: MongoDB data insertion failed');
+          return;
+        }
 
         // Add user data to Firestore
         await firestore.collection('users').add({
@@ -105,12 +105,12 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
           print('Password is too weak');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              backgroundColor: Colors.black26,
+              backgroundColor: Colors.amber,
               content: Text(
                 'Password is too weak',
                 style: TextStyle(
                   fontSize: 20.0,
-                  color: Colors.amberAccent,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -119,12 +119,12 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
           print('Account is already exits');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              backgroundColor: Colors.black26,
+              backgroundColor: Colors.amber,
               content: Text(
                 'Account is already exits',
                 style: TextStyle(
                   fontSize: 20.0,
-                  color: Colors.amber,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -132,13 +132,13 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
         } else {
           print(error);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.black26,
+            SnackBar(
+              backgroundColor: Colors.red,
               content: Text(
-                'Password and Conform Password does not matched',
+                'Error: $error',
                 style: TextStyle(
                   fontSize: 20.0,
-                  color: Colors.red,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -240,9 +240,9 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
                   controller: emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter email';
+                      return 'Please enter your email';
                     } else if (!value.contains('@')) {
-                      return "please enter 'Valid Email'";
+                      return 'Please enter a valid email';
                     }
                     return null;
                   },
@@ -264,7 +264,9 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
                   controller: mobilenoController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter mobile no';
+                      return 'Please enter your mobile number';
+                    } else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
+                      return 'Please enter a valid mobile number';
                     }
                     return null;
                   },
@@ -332,7 +334,9 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
                   controller: passwordController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter password';
+                      return 'Please enter your password';
+                    } else if (value.length < 8) {
+                      return 'Password must be at least 8 characters';
                     }
                     return null;
                   },
@@ -356,7 +360,9 @@ class _EmailPassSignUpState extends State<EmailPassSignUp> {
                   controller: conformpassController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter password again';
+                      return 'Please enter your password again';
+                    } else if (value != passwordController.text) {
+                      return 'Passwords do not match';
                     }
                     return null;
                   },

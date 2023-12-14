@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:happycare/auth/signin_page.dart';
 import 'package:happycare/dbHelper/mongodb.dart';
 import 'package:happycare/screens/nurse/patient_details_screen_nurse.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -64,10 +65,10 @@ class NurseHomeScreen extends StatelessWidget {
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              backgroundColor: Colors.blueGrey,
+              backgroundColor: Colors.amber,
               content: Text(
                 'User with $nurseName not found for that email',
-                style: const TextStyle(fontSize: 18.0, color: Colors.amber),
+                style: const TextStyle(fontSize: 18.0, color: Colors.white,),
               ),
             ),
           );
@@ -93,11 +94,25 @@ class NurseHomeScreen extends StatelessWidget {
                 title: const Text(
                   'Patients Assigned To Nurse',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
                   maxLines: 2,
                 ),
                 centerTitle: true,
+                automaticallyImplyLeading: false,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.logout),
+                    hoverColor: Colors.black,
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignInScreen()));
+                    },
+                  ),
+                ],
               ),
               body: ListView.builder(
                 itemCount: patients!.length,

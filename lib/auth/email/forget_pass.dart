@@ -28,6 +28,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             'Password Reset Email Has Been Sent',
             style: TextStyle(
               fontSize: 15.0,
+              color: Colors.white
             ),
           ),
         ),
@@ -48,6 +49,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               'No user found for that email!',
               style: TextStyle(
                 fontSize: 15.0,
+                color: Colors.white
               ),
             ),
           ),
